@@ -52,7 +52,7 @@ def RGBToHLS(r, g, b):
     return colorsys.rgb_to_hls(r/255.0, g/255.0, b/255.0)
 
 def float_to_percent(x):
-    if x==1:
-        return '1'
-    else:
-        return '%.0f'%(x*100)+'%'
+    return '%.0f'%(x*100)+'%'
+
+def float_to_degrees(x):
+    return str(round(x*360))+'°'

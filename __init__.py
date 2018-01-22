@@ -141,8 +141,12 @@ class Command:
 
         ncolor = HTMLColorToPILColor(text)
         r, g, b = HTMLColorToRGB(text)
+
+        #let's get HSL like here https://www.rapidtables.com/convert/color/rgb-to-hsl.html
         h, l, s = RGBToHLS(r, g, b)
-        h, l, s = [float_to_percent(x) for x in (h, l, s)]
+        h = float_to_degrees(h)
+        l = float_to_percent(l)
+        s = float_to_percent(s)
 
         dlg_proc(self.h_dlg, DLG_CTL_PROP_SET, name='panel_color', prop={
                 'color': ncolor,
