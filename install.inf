@@ -9,4 +9,4 @@ api=1.0.218
 [item1]
 section=events
 events=on_open,on_change_slow,on_hotspot
-lexers=regex:.*HTML.*
+lexers=regex:.*(HTML|CSS|JavaScript).*
