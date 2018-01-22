@@ -9,7 +9,7 @@ REGEX_COLORS = r'(\#[0-9a-f]{3}\b)|(\#[0-9a-f]{6}\b)'
 re_compiled = re.compile(REGEX_COLORS, re.I)
 FORM_W = 160
 FORM_H = 80
-HINT_PADDING = 6
+HINT_PADDING = 8
 COLOR_FORM_BACK = 0x505050
 COLOR_FORM_FONT = 0xE0E0E0
 
@@ -99,13 +99,22 @@ class Command:
                 'color': COLOR_FORM_BACK,
                 })
 
+        n = dlg_proc(h, DLG_CTL_ADD, 'colorpanel')
+        dlg_proc(h, DLG_CTL_PROP_SET, index=n, prop={
+                'name': 'panel_color',
+                'x': 8,
+                'y': 8,
+                'w': 145,
+                'h': 26,
+                })
+
         n = dlg_proc(h, DLG_CTL_ADD, 'label')
         dlg_proc(h, DLG_CTL_PROP_SET, index=n, prop={
                 'name': 'label_text',
                 'cap': '??',
                 'font_color': COLOR_FORM_FONT,
                 'x': 8,
-                'y': 8,
+                'y': 38,
                 })
 
         n = dlg_proc(h, DLG_CTL_ADD, 'label')
@@ -114,27 +123,22 @@ class Command:
                 'cap': '??',
                 'font_color': COLOR_FORM_FONT,
                 'x': 8,
-                'y': 28,
-                })
-
-        n = dlg_proc(h, DLG_CTL_ADD, 'colorpanel')
-        dlg_proc(h, DLG_CTL_PROP_SET, index=n, prop={
-                'name': 'panel_color',
-                'x': 8,
-                'y': 48,
-                'w': 145,
-                'h': 26,
+                'y': 56,
                 })
 
     def update_form(self, text):
 
         ncolor = HTMLColorToPILColor(text)
-
-        dlg_proc(self.h_dlg, DLG_CTL_PROP_SET, name='label_text', prop={
-                'cap': text,
-                })
+        r, g, b = HTMLColorToRGB(text)
 
         dlg_proc(self.h_dlg, DLG_CTL_PROP_SET, name='panel_color', prop={
                 'color': ncolor,
                 })
 
+        dlg_proc(self.h_dlg, DLG_CTL_PROP_SET, name='label_text', prop={
+                'cap': text,
+                })
+
+        dlg_proc(self.h_dlg, DLG_CTL_PROP_SET, name='label_rgb', prop={
+                'cap': 'rgb(%d, %d, %d)' % (r, g, b),
+                })
