@@ -7,9 +7,11 @@ from .colorcodes import *
 MY_TAG = 101 #uniq value for all plugins with ed.hotspots()
 REGEX_COLORS = r'(\#[0-9a-f]{3}\b)|(\#[0-9a-f]{6}\b)'
 re_compiled = re.compile(REGEX_COLORS, re.I)
-FORM_W = 200
-FORM_H = 60
+FORM_W = 160
+FORM_H = 80
 HINT_PADDING = 6
+COLOR_FORM_BACK = 0x505050
+COLOR_FORM_FONT = 0xE0E0E0
 
 
 class Command:
@@ -58,10 +60,10 @@ class Command:
             hotspot = ed.hotspots(HOTSPOT_GET_LIST)[hotspot_index]
 
             data = json.loads(hotspot['tag_str'])
-            color = HTMLColorToPILColor(data['s'])
+            self.update_form(data['s'])
+
             pos_x = data['x']
             pos_y = data['y']
-
             pos = ed.convert(CONVERT_CARET_TO_PIXELS, x=pos_x, y=pos_y)
 
             cell_size = ed.get_prop(PROP_CELL_SIZE)
@@ -78,7 +80,6 @@ class Command:
                     'p': ed_self.h,
                     'x': hint_x,
                     'y': hint_y,
-                    'color': color,
                     })
             dlg_proc(self.h_dlg, DLG_SHOW_NONMODAL)
 
@@ -94,5 +95,46 @@ class Command:
         dlg_proc(h, DLG_PROP_SET, prop={
                 'w': FORM_W,
                 'h': FORM_H,
-                'border': False
+                'border': False,
+                'color': COLOR_FORM_BACK,
                 })
+
+        n = dlg_proc(h, DLG_CTL_ADD, 'label')
+        dlg_proc(h, DLG_CTL_PROP_SET, index=n, prop={
+                'name': 'label_text',
+                'cap': '??',
+                'font_color': COLOR_FORM_FONT,
+                'x': 8,
+                'y': 8,
+                })
+
+        n = dlg_proc(h, DLG_CTL_ADD, 'label')
+        dlg_proc(h, DLG_CTL_PROP_SET, index=n, prop={
+                'name': 'label_rgb',
+                'cap': '??',
+                'font_color': COLOR_FORM_FONT,
+                'x': 8,
+                'y': 28,
+                })
+
+        n = dlg_proc(h, DLG_CTL_ADD, 'colorpanel')
+        dlg_proc(h, DLG_CTL_PROP_SET, index=n, prop={
+                'name': 'panel_color',
+                'x': 8,
+                'y': 48,
+                'w': 145,
+                'h': 26,
+                })
+
+    def update_form(self, text):
+
+        ncolor = HTMLColorToPILColor(text)
+
+        dlg_proc(self.h_dlg, DLG_CTL_PROP_SET, name='label_text', prop={
+                'cap': text,
+                })
+
+        dlg_proc(self.h_dlg, DLG_CTL_PROP_SET, name='panel_color', prop={
+                'color': ncolor,
+                })
+
