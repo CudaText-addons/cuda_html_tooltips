@@ -60,12 +60,13 @@ class Command:
             pos_y = data['y']
 
             pos = ed.convert(CONVERT_CARET_TO_PIXELS, x=pos_x, y=pos_y)
+            cellsize = ed.get_prop(PROP_CELL_SIZE)
 
             dlg_proc(self.h_dlg, DLG_PROP_SET, prop={
-                    'x':pos[0],
-                    'y':pos[1]+25,
-                    'color':color,
-                    'p':ed_self.h
+                    'p': ed_self.h,
+                    'x': pos[0],
+                    'y': pos[1]+cellsize[1]+8,
+                    'color': color,
                     })
             dlg_proc(self.h_dlg, DLG_SHOW_NONMODAL)
 
