@@ -7,7 +7,7 @@ from .colorcodes import *
 MY_TAG = 101 #uniq value for all plugins with ed.hotspots()
 REGEX_COLORS = r'(\#[0-9a-f]{3}\b)|(\#[0-9a-f]{6}\b)'
 re_compiled = re.compile(REGEX_COLORS, re.I)
-FORM_W = 200
+FORM_W = 170
 FORM_H = 102
 HINT_PADDING = 8
 COLOR_FORM_BACK = 0x505050
