@@ -11,7 +11,6 @@ section=events
 events=on_hotspot
 
 [item2]
-section=commands
-caption=HTML Tooltips
-method=find_colors
-
+section=events
+events=on_open,on_change_slow
+lexers=regex:.*HTML.*

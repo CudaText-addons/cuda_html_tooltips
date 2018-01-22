@@ -14,10 +14,19 @@ class Command:
 
         self.init_form()
 
+    def on_change_slow(self, ed_self):
+
+        self.find_colors()
+
+    def on_open(self, ed_self):
+
+        self.find_colors()
 
     def find_colors(self):
 
         ed.hotspots(HOTSPOT_DELETE_BY_TAG, tag=MY_TAG)
+        count = 0
+
         for nline in range(ed.get_line_count()):
             line = ed.get_text_line(nline)
             items = re_compiled.finditer(line)
@@ -36,6 +45,8 @@ class Command:
                             tag_str=data,
                             pos=(span[0], nline, span[1], nline)
                             )
+                count += 1
+        #print('HTML Tooltips: %d items'%count)
 
 
     def on_hotspot(self, ed_self, entered, hotspot_index):
