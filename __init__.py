@@ -7,11 +7,12 @@ from .colorcodes import *
 MY_TAG = 101 #uniq value for all plugins with ed.hotspots()
 REGEX_COLORS = r'(\#[0-9a-f]{3}\b)|(\#[0-9a-f]{6}\b)'
 re_compiled = re.compile(REGEX_COLORS, re.I)
-FORM_W = 160
-FORM_H = 80
+FORM_W = 200
+FORM_H = 102
 HINT_PADDING = 8
 COLOR_FORM_BACK = 0x505050
 COLOR_FORM_FONT = 0xE0E0E0
+COLOR_FORM_FONT2 = 0x40E0E0
 
 
 class Command:
@@ -104,15 +105,16 @@ class Command:
                 'name': 'panel_color',
                 'x': 8,
                 'y': 8,
-                'w': 145,
+                'w': FORM_W-16,
                 'h': 26,
+                'props': (1,0x808080,0x202020,0xFFFFFF),
                 })
 
         n = dlg_proc(h, DLG_CTL_ADD, 'label')
         dlg_proc(h, DLG_CTL_PROP_SET, index=n, prop={
                 'name': 'label_text',
                 'cap': '??',
-                'font_color': COLOR_FORM_FONT,
+                'font_color': COLOR_FORM_FONT2,
                 'x': 8,
                 'y': 38,
                 })
@@ -123,13 +125,24 @@ class Command:
                 'cap': '??',
                 'font_color': COLOR_FORM_FONT,
                 'x': 8,
-                'y': 56,
+                'y': 58,
+                })
+
+        n = dlg_proc(h, DLG_CTL_ADD, 'label')
+        dlg_proc(h, DLG_CTL_PROP_SET, index=n, prop={
+                'name': 'label_hls',
+                'cap': '??',
+                'font_color': COLOR_FORM_FONT,
+                'x': 8,
+                'y': 78,
                 })
 
     def update_form(self, text):
 
         ncolor = HTMLColorToPILColor(text)
         r, g, b = HTMLColorToRGB(text)
+        h, l, s = RGBToHLS(r, g, b)
+        h, l, s = [float_to_percent(x) for x in (h, l, s)]
 
         dlg_proc(self.h_dlg, DLG_CTL_PROP_SET, name='panel_color', prop={
                 'color': ncolor,
@@ -141,4 +154,8 @@ class Command:
 
         dlg_proc(self.h_dlg, DLG_CTL_PROP_SET, name='label_rgb', prop={
                 'cap': 'rgb(%d, %d, %d)' % (r, g, b),
+                })
+
+        dlg_proc(self.h_dlg, DLG_CTL_PROP_SET, name='label_hls', prop={
+                'cap': 'hsl(%s, %s, %s)' % (h, s, l),
                 })

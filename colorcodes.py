@@ -1,4 +1,5 @@
 ### http://code.activestate.com/recipes/266466-html-colors-tofrom-rgb-tuples/
+import colorsys
 
 def RGBToHTMLColor(rgb_tuple):
     """ convert an (R, G, B) tuple to #RRGGBB """
@@ -45,3 +46,13 @@ def PILColorToHTMLColor(pil_integer):
 
 def RGBToPILColor(rgb_tuple):
     return HTMLColorToPILColor(RGBToHTMLColor(rgb_tuple))
+
+
+def RGBToHLS(r, g, b):
+    return colorsys.rgb_to_hls(r/255.0, g/255.0, b/255.0)
+
+def float_to_percent(x):
+    if x==1:
+        return '1'
+    else:
+        return '%.0f'%(x*100)+'%'
