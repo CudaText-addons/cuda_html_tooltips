@@ -7,6 +7,9 @@ from .colorcodes import *
 MY_TAG = 101 #uniq value for all plugins with ed.hotspots()
 REGEX_COLORS = r'(\#[0-9a-f]{3}\b)|(\#[0-9a-f]{6}\b)'
 re_compiled = re.compile(REGEX_COLORS, re.I)
+FORM_W = 200
+FORM_H = 60
+HINT_PADDING = 6
 
 
 class Command:
@@ -60,12 +63,21 @@ class Command:
             pos_y = data['y']
 
             pos = ed.convert(CONVERT_CARET_TO_PIXELS, x=pos_x, y=pos_y)
-            cellsize = ed.get_prop(PROP_CELL_SIZE)
+
+            cell_size = ed.get_prop(PROP_CELL_SIZE)
+            ed_coord = ed.get_prop(PROP_COORDS)
+            ed_size_x = ed_coord[2]-ed_coord[0]
+            ed_size_y = ed_coord[3]-ed_coord[1]
+            hint_x = pos[0]
+            hint_y = pos[1] + cell_size[1] + HINT_PADDING
+            #no space for tooltip on bottom?
+            if hint_y + FORM_H > ed_size_y:
+                hint_y = pos[1] - FORM_H - HINT_PADDING
 
             dlg_proc(self.h_dlg, DLG_PROP_SET, prop={
                     'p': ed_self.h,
-                    'x': pos[0],
-                    'y': pos[1]+cellsize[1]+8,
+                    'x': hint_x,
+                    'y': hint_y,
                     'color': color,
                     })
             dlg_proc(self.h_dlg, DLG_SHOW_NONMODAL)
@@ -79,4 +91,8 @@ class Command:
         h = dlg_proc(0, DLG_CREATE)
         self.h_dlg = h
 
-        dlg_proc(h, DLG_PROP_SET, prop={'w':300, 'h':50, 'border':False})
+        dlg_proc(h, DLG_PROP_SET, prop={
+                'w': FORM_W,
+                'h': FORM_H,
+                'border': False
+                })
