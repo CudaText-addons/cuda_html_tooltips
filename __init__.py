@@ -35,15 +35,13 @@ class Command:
 
         for nline in range(ed.get_line_count()):
             line = ed.get_text_line(nline)
-            items = re_compiled.finditer(line)
-            for item in items:
+            for item in re_compiled.finditer(line):
                 span = item.span()
-                substr = line[span[0]:span[1]]
                 data = json.dumps({
-                        's': substr,
+                        's': item.group(0),
                         'x': span[0],
                         'x2': span[1],
-                        'y': nline
+                        'y': nline,
                         })
 
                 ed.hotspots(HOTSPOT_ADD,
