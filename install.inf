@@ -1,0 +1,16 @@
+[info]
+title=HTML Tooltips
+desc=For HTML color tokens (#rgb, #rrggbb) plugin shows nice colored tooltips
+type=cudatext-plugin
+subdir=cuda_html_tooltips
+homepage=
+
+[item1]
+section=events
+events=on_hotspot
+
+[item2]
+section=commands
+caption=HTML Tooltips
+method=find_colors
+
