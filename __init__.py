@@ -13,6 +13,7 @@ HINT_PADDING = 8
 COLOR_FORM_BACK = 0x505050
 COLOR_FORM_FONT = 0xE0E0E0
 COLOR_FORM_FONT2 = 0x40E0E0
+COLOR_FORM_PANEL_BORDER = 0xFFFFFF
 
 
 class Command:
@@ -71,9 +72,14 @@ class Command:
             ed_size_y = ed_coord[3]-ed_coord[1]
             hint_x = pos[0]
             hint_y = pos[1] + cell_size[1] + HINT_PADDING
-            #no space for tooltip on bottom?
+
+            #no space on bottom?
             if hint_y + FORM_H > ed_size_y:
                 hint_y = pos[1] - FORM_H - HINT_PADDING
+
+            #no space on right?
+            if hint_x + FORM_W > ed_size_x:
+                hint_x = ed_size_x - FORM_W
 
             dlg_proc(self.h_dlg, DLG_PROP_SET, prop={
                     'p': ed_self.h,
@@ -105,7 +111,7 @@ class Command:
                 'y': 8,
                 'w': FORM_W-16,
                 'h': 26,
-                'props': (1,0x808080,0x202020,0xFFFFFF),
+                'props': (1,0x808080,0x202020,COLOR_FORM_PANEL_BORDER),
                 })
 
         n = dlg_proc(h, DLG_CTL_ADD, 'label')
