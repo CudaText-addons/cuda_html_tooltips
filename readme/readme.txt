@@ -6,9 +6,9 @@ When you move mouse cursor over some fragments, tooltip appears.
   #rgb 
   #rrggbb
   and adds colored tooltips for them.
-2) It finds HTML picture refs: <img src="...">; and adds picture tooltips for filenames.
-  Internally, it finds any quoted picture filenames (png, gif, jpeg, bmp) without testing tags.
-  Online links (http:, https:) are not supported. 
+2) It finds HTML picture refs: src="..." or href="..."; and adds picture tooltips for filenames.
+  Internally, it finds any quoted picture filenames (png, gif, jpeg, bmp, ico) without testing tags.
+  Online links (http:, https:) are not supported.
 3) It finds HTML entities like &copy; &amp; etc, and adds Unicode tooltips for them.
 
 It finds fragments:
