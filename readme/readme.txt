@@ -1,18 +1,22 @@
 Plugin for CudaText.
 It works in HTML/CSS files (any lexer name with words "HTML", "CSS").
+When you move mouse cursor over some fragments, tooltip appears.
 
-When you move mouse cursor over found tokens, tooltip appears.
-1) It finds HTML color tokens: #rgb #rrggbb; and adds colored tooltips for them.
+1) It finds HTML color values: 
+  #rgb 
+  #rrggbb
+  and adds colored tooltips for them.
 2) It finds HTML picture refs: <img src="...">; and adds picture tooltips for filenames.
-Internally, it finds any quoted picture filenames (png, gif, jpeg, bmp) without testing tags.
-Online refs (http:, https:) are not supported. 
+  Internally, it finds any quoted picture filenames (png, gif, jpeg, bmp) without testing tags.
+  Online links (http:, https:) are not supported. 
 3) It finds HTML entities like &copy; &amp; etc, and adds Unicode tooltips for them.
 
-It finds tokens:
+It finds fragments:
 - on opening file,
 - after text is changed + pause passed (CudaText option "py_change_slow").
 If you're interested, what is HSL display, see
 https://www.rapidtables.com/convert/color/rgb-to-hsl.html
+
 
 Author: Alexey (CudaText)
 License: MIT
