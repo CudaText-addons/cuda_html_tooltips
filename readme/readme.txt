@@ -6,6 +6,7 @@ When you move mouse cursor over found tokens, tooltip appears.
 2) It finds HTML picture refs: <img src="...">; and adds picture tooltips for filenames.
 Internally, it finds any quoted picture filenames (png, gif, jpeg, bmp) without testing tags.
 Online refs (http:, https:) are not supported. 
+3) It finds HTML entities like &copy; &amp; etc, and adds Unicode tooltips for them.
 
 It finds tokens:
 - on opening file,
