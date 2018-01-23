@@ -9,13 +9,13 @@ MY_TAG = 101 #uniq value for all plugins with ed.hotspots()
 
 REGEX_COLORS = r'(\#[0-9a-f]{3}\b)|(\#[0-9a-f]{6}\b)'
 REGEX_PIC = r'(\'|")[^\'"]+?\.(png|gif|jpg|jpeg|bmp|ico)\1'
-REGEX_PIC2 = r'\([^\'"\(\)]+?\.(png|gif|jpg|jpeg|bmp|ico)\)'
+REGEX_PIC_CSS = r'\([^\'"\(\)]+?\.(png|gif|jpg|jpeg|bmp|ico)\)'
 REGEX_ENT = r'&\w+;'
 
 html_parser = HTMLParser()
 re_colors_compiled = re.compile(REGEX_COLORS, re.I)
 re_pic_compiled = re.compile(REGEX_PIC, re.I)
-re_pic2_compiled = re.compile(REGEX_PIC2, re.I)
+re_pic_css_compiled = re.compile(REGEX_PIC_CSS, re.I)
 re_ent_compiled = re.compile(REGEX_ENT, 0)
 
 FORM_COLOR_W = 170
@@ -92,7 +92,7 @@ class Command:
             if ed.get_filename():
                 for item in re_pic_compiled.finditer(line):
                     span = item.span()
-                    text = item.group(0)
+                    text = item.group(0)[1:-1]
                     if 'http://' in text: continue
                     if 'https://' in text: continue
 
@@ -111,9 +111,9 @@ class Command:
 
             #same for CSS pics
             if ed.get_filename() and ('CSS' in ed.get_prop(PROP_LEXER_FILE)):
-                for item in re_pic2_compiled.finditer(line):
+                for item in re_pic_css_compiled.finditer(line):
                     span = item.span()
-                    text = item.group(0)
+                    text = item.group(0)[1:-1]
                     if 'http://' in text: continue
                     if 'https://' in text: continue
 
@@ -365,12 +365,9 @@ class Command:
 
     def get_pic_filename(self, text):
 
-        if os.sep!='/':
+        #for Windows
+        if os.sep != '/':
             text = text.replace('/', os.sep)
-        if text[0] in '\'"':
-            text = text[1:-1]
-        if text.startswith('(') and text.endswith(')'):
-            text = text[1:-1]
 
         dirname = os.path.dirname(ed.get_filename())
         return os.path.join(dirname, text)
