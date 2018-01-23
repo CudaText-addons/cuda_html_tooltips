@@ -3,20 +3,27 @@ import json
 import os
 from cudatext import *
 from .colorcodes import *
+from html.parser import HTMLParser
 
 MY_TAG = 101 #uniq value for all plugins with ed.hotspots()
 
 REGEX_COLORS = r'(\#[0-9a-f]{3}\b)|(\#[0-9a-f]{6}\b)'
 REGEX_PIC = r'(\'|")[^\'"]+?\.(jpg|jpeg|jpe|jfif|bmp|png|gif|ico)\1'
+REGEX_ENT = r'&\w+;'
+
+html_parser = HTMLParser()
 re_colors_compiled = re.compile(REGEX_COLORS, re.I)
 re_pic_compiled = re.compile(REGEX_PIC, re.I)
+re_ent_compiled = re.compile(REGEX_ENT, 0)
 
 FORM_COLOR_W = 170
 FORM_COLOR_H = 100
-FORM_GAP = 4
-FORM_GAP_OUT = 8
 FORM_PIC_W = 300
 FORM_PIC_H = 240
+FORM_ENT_W = 50
+FORM_ENT_H = 50
+FORM_GAP = 4
+FORM_GAP_OUT = 8
 COLOR_FORM_BACK = 0x505050
 COLOR_FORM_FONT = 0xE0E0E0
 COLOR_FORM_FONT2 = 0x40E0E0
@@ -28,6 +35,7 @@ class Command:
 
         self.init_form_color()
         self.init_form_pic()
+        self.init_form_ent()
 
     def on_change_slow(self, ed_self):
 
@@ -45,13 +53,28 @@ class Command:
         for nline in range(ed.get_line_count()):
             line = ed.get_text_line(nline)
 
+            #find entities
+            for item in re_ent_compiled.finditer(line):
+                span = item.span()
+                data = json.dumps({
+                        'ent': item.group(0),
+                        'x': span[0],
+                        'y': nline,
+                        })
+
+                ed.hotspots(HOTSPOT_ADD,
+                            tag=MY_TAG,
+                            tag_str=data,
+                            pos=(span[0], nline, span[1], nline)
+                            )
+                count += 1
+
             #find colors
             for item in re_colors_compiled.finditer(line):
                 span = item.span()
                 data = json.dumps({
                         'color': item.group(0),
                         'x': span[0],
-                        'x2': span[1],
                         'y': nline,
                         })
 
@@ -69,11 +92,10 @@ class Command:
                     text = item.group(0)
                     if 'http://' in text: continue
                     if 'https://' in text: continue
-                
+
                     data = json.dumps({
                             'pic': text,
                             'x': span[0],
-                            'x2': span[1],
                             'y': nline,
                             })
 
@@ -83,13 +105,15 @@ class Command:
                                 pos=(span[0], nline, span[1], nline)
                                 )
                     count += 1
-                
+
             #print('HTML Tooltips: %d items'%count)
 
 
     def on_hotspot(self, ed_self, entered, hotspot_index):
 
-        if entered:
+        if not entered:
+            self.hide_forms()
+        else:
             hotspot = ed.hotspots(HOTSPOT_GET_LIST)[hotspot_index]
             if hotspot['tag'] != MY_TAG: return
 
@@ -97,15 +121,20 @@ class Command:
             text = data.get('color', '')
             if text:
                 self.update_form_color(text)
-                h_dlg = self.h_dlg
+                h_dlg = self.h_dlg_color
             else:
                 text = data.get('pic', '')
                 if text:
                     if not self.update_form_pic(text): return
                     h_dlg = self.h_dlg_pic
                 else:
-                    return
-                    
+                    text = data.get('ent', '')
+                    if text:
+                        if not self.update_form_ent(text): return
+                        h_dlg = self.h_dlg_ent
+                    else:
+                        return
+
             prop = dlg_proc(h_dlg, DLG_PROP_GET)
             form_w = prop['w']
             form_h = prop['h']
@@ -136,15 +165,18 @@ class Command:
                     })
             dlg_proc(h_dlg, DLG_SHOW_NONMODAL)
 
-        else:
-            dlg_proc(self.h_dlg, DLG_HIDE)
-            dlg_proc(self.h_dlg_pic, DLG_HIDE)
+
+    def hide_forms(self):
+
+        dlg_proc(self.h_dlg_color, DLG_HIDE)
+        dlg_proc(self.h_dlg_pic, DLG_HIDE)
+        dlg_proc(self.h_dlg_ent, DLG_HIDE)
 
 
     def init_form_color(self):
 
         h = dlg_proc(0, DLG_CREATE)
-        self.h_dlg = h
+        self.h_dlg_color = h
 
         dlg_proc(h, DLG_PROP_SET, prop={
                 'w': FORM_COLOR_W,
@@ -231,6 +263,29 @@ class Command:
                 })
 
 
+    def init_form_ent(self):
+
+        h = dlg_proc(0, DLG_CREATE)
+        self.h_dlg_ent = h
+
+        dlg_proc(h, DLG_PROP_SET, prop={
+                'w': FORM_ENT_W,
+                'h': FORM_ENT_H,
+                'border': False,
+                'color': COLOR_FORM_BACK,
+                })
+
+        n = dlg_proc(h, DLG_CTL_ADD, 'colorpanel')
+        dlg_proc(h, DLG_CTL_PROP_SET, index=n, prop={
+                'name': 'label_text',
+                'cap': '??',
+                'color': COLOR_FORM_BACK,
+                'font_color': COLOR_FORM_FONT,
+                'font_size': 28,
+                'align': ALIGN_CLIENT,
+                })
+
+
     def update_form_color(self, text):
 
         ncolor = HTMLColorToPILColor(text)
@@ -242,19 +297,19 @@ class Command:
         l = float_to_percent(l)
         s = float_to_percent(s)
 
-        dlg_proc(self.h_dlg, DLG_CTL_PROP_SET, name='panel_color', prop={
+        dlg_proc(self.h_dlg_color, DLG_CTL_PROP_SET, name='panel_color', prop={
                 'color': ncolor,
                 })
 
-        dlg_proc(self.h_dlg, DLG_CTL_PROP_SET, name='label_text', prop={
+        dlg_proc(self.h_dlg_color, DLG_CTL_PROP_SET, name='label_text', prop={
                 'cap': text,
                 })
 
-        dlg_proc(self.h_dlg, DLG_CTL_PROP_SET, name='label_rgb', prop={
+        dlg_proc(self.h_dlg_color, DLG_CTL_PROP_SET, name='label_rgb', prop={
                 'cap': 'rgb(%d, %d, %d)' % (r, g, b),
                 })
 
-        dlg_proc(self.h_dlg, DLG_CTL_PROP_SET, name='label_hls', prop={
+        dlg_proc(self.h_dlg_color, DLG_CTL_PROP_SET, name='label_hls', prop={
                 'cap': 'hsl(%s, %s, %s)' % (h, s, l),
                 })
 
@@ -276,12 +331,20 @@ class Command:
         return True
 
 
+    def update_form_ent(self, text):
+
+        dlg_proc(self.h_dlg_ent, DLG_CTL_PROP_SET, name='label_text', prop={
+                'cap': html_parser.unescape(text),
+                })
+        return True
+
+
     def get_pic_filename(self, text):
-    
+
         if os.sep!='/':
             text = text.replace('/', os.sep)
         if text[0] in '\'"':
             text = text[1:-1]
-            
+
         dirname = os.path.dirname(ed.get_filename())
         return os.path.join(dirname, text)
