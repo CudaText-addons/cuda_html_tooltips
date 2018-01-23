@@ -24,6 +24,7 @@ FORM_PIC_W = 300
 FORM_PIC_H = 240
 FORM_ENT_W = 50
 FORM_ENT_H = 50
+FORM_ENT_FONT_SIZE = 28
 FORM_GAP = 4
 FORM_GAP_OUT = 8
 COLOR_FORM_BACK = 0x505050
@@ -304,7 +305,7 @@ class Command:
                 'cap': '??',
                 'color': COLOR_FORM_BACK,
                 'font_color': COLOR_FORM_FONT,
-                'font_size': 28,
+                'font_size': FORM_ENT_FONT_SIZE,
                 'align': ALIGN_CLIENT,
                 })
 
