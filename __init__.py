@@ -93,7 +93,7 @@ class Command:
             else:
                 text = data.get('pic', '')
                 if text:
-                    self.update_form_pic(text)
+                    if not self.update_form_pic(text): return
                     h_dlg = self.h_dlg_pic
                 else:
                     return
@@ -254,17 +254,19 @@ class Command:
     def update_form_pic(self, text):
 
         fn = ed.get_filename()
-        if not fn: return
-        #todo: consider os.sep in Win
+        if not fn: return False
         
-        if not text: return
+        if not text: return False
+        if 'http://' in text: return False
+        if 'https://' in text: return False
+        
+        if os.sep!='/':
+            text = text.replace('/', os.sep)
         if text[0] in '\'"':
             text = text[1:-1]
             
         fn = os.path.join(os.path.dirname(fn), text)
-        if not os.path.isfile(fn):
-            dlg_proc(self.h_dlg_pic, DLG_HIDE)
-            return
+        if not os.path.isfile(fn): return False
 
         image_proc(self.h_img, IMAGE_LOAD, fn)
         size_x, size_y = image_proc(self.h_img, IMAGE_GET_SIZE)
@@ -272,3 +274,4 @@ class Command:
         dlg_proc(self.h_dlg_pic, DLG_CTL_PROP_SET, name='label_text', prop={
                 'cap': '%dx%d' % (size_x, size_y),
                 })
+        return True

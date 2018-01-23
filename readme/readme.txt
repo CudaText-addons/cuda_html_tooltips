@@ -1,10 +1,11 @@
 Plugin for CudaText.
 It works in HTML/CSS/JavaScript files (any lexer name with words "HTML", "CSS", "JavaScript").
 
-It finds HTML color tokens: #rgb #rrggbb; and adds colored tooltips for them.
-It finds HTML picture refs: <img src="...">; and adds picture tooltips for filenames.
-(Internally, if finds any quoted picture filenames without testing tags.) 
 When you move mouse cursor over found tokens, tooltip appears.
+1) It finds HTML color tokens: #rgb #rrggbb; and adds colored tooltips for them.
+2) It finds HTML picture refs: <img src="...">; and adds picture tooltips for filenames.
+Internally, it finds any quoted picture filenames (png, gif, jpeg, bmp) without testing tags.
+Online refs (http:, https:) are not supported. 
 
 It finds tokens:
 - on opening file,
