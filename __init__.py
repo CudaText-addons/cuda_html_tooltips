@@ -45,6 +45,7 @@ class Command:
         for nline in range(ed.get_line_count()):
             line = ed.get_text_line(nline)
 
+            #find colors
             for item in re_colors_compiled.finditer(line):
                 span = item.span()
                 data = json.dumps({
@@ -61,23 +62,31 @@ class Command:
                             )
                 count += 1
 
-            for item in re_pic_compiled.finditer(line):
-                span = item.span()
-                data = json.dumps({
-                        'pic': item.group(0),
-                        'x': span[0],
-                        'x2': span[1],
-                        'y': nline,
-                        })
-
-                ed.hotspots(HOTSPOT_ADD,
-                            tag=MY_TAG,
-                            tag_str=data,
-                            pos=(span[0], nline, span[1], nline)
-                            )
-                count += 1
+            #find pics, only for named files
+            if ed.get_filename():
+                for item in re_pic_compiled.finditer(line):
+                    span = item.span()
+                    text = item.group(0)
+                    
+                    #don't support online refs
+                    if 'http://' in text: continue
+                    if 'https://' in text: continue
                 
-        #print('HTML Tooltips: %d items'%count)
+                    data = json.dumps({
+                            'pic': text,
+                            'x': span[0],
+                            'x2': span[1],
+                            'y': nline,
+                            })
+
+                    ed.hotspots(HOTSPOT_ADD,
+                                tag=MY_TAG,
+                                tag_str=data,
+                                pos=(span[0], nline, span[1], nline)
+                                )
+                    count += 1
+                
+            #print('HTML Tooltips: %d items'%count)
 
 
     def on_hotspot(self, ed_self, entered, hotspot_index):
@@ -256,10 +265,6 @@ class Command:
 
         fn = ed.get_filename()
         if not fn: return False
-        
-        if not text: return False
-        if 'http://' in text: return False
-        if 'https://' in text: return False
         
         if os.sep!='/':
             text = text.replace('/', os.sep)
