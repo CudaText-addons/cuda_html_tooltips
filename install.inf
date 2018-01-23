@@ -1,6 +1,6 @@
 [info]
 title=HTML Tooltips
-desc=For HTML color tokens (#rgb, #rrggbb) plugin shows nice colored tooltips
+desc=In HTML/CSS files, plugin shows tooltips for: HTML colors (#rgb, #rrggbb), picture filenames, etc
 type=cudatext-plugin
 subdir=cuda_html_tooltips
 homepage=https://github.com/CudaText-addons/cuda_html_tooltips
@@ -9,4 +9,4 @@ api=1.0.218
 [item1]
 section=events
 events=on_open,on_change_slow,on_hotspot
-lexers=regex:.*(HTML|CSS|JavaScript).*
+lexers=regex:.*(HTML|CSS).*

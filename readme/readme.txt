@@ -1,5 +1,5 @@
 Plugin for CudaText.
-It works in HTML/CSS/JavaScript files (any lexer name with words "HTML", "CSS", "JavaScript").
+It works in HTML/CSS files (any lexer name with words "HTML", "CSS").
 
 When you move mouse cursor over found tokens, tooltip appears.
 1) It finds HTML color tokens: #rgb #rrggbb; and adds colored tooltips for them.
