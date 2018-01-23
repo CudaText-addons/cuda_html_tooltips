@@ -1,6 +1,7 @@
 
 2018.01.24
 + supports HTML entities like &copy; &amp;
++ supports CSS picture filenames in () brackets
 
 2018.01.23
 + supports tooltips for picture files (<img src="....">)
