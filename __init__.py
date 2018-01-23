@@ -12,7 +12,8 @@ re_colors_compiled = re.compile(REGEX_COLORS, re.I)
 re_pic_compiled = re.compile(REGEX_PIC, re.I)
 
 FORM_COLOR_W = 170
-FORM_COLOR_H = 102
+FORM_COLOR_H = 100
+FORM_GAP = 4
 FORM_GAP_OUT = 8
 FORM_PIC_W = 300
 FORM_PIC_H = 240
@@ -148,9 +149,9 @@ class Command:
         n = dlg_proc(h, DLG_CTL_ADD, 'colorpanel')
         dlg_proc(h, DLG_CTL_PROP_SET, index=n, prop={
                 'name': 'panel_color',
-                'x': 8,
-                'y': 8,
-                'w': FORM_COLOR_W-16,
+                'x': FORM_GAP,
+                'y': FORM_GAP,
+                'w': FORM_COLOR_W-2*FORM_GAP,
                 'h': 26,
                 'props': (1,0x808080,0x202020,COLOR_FORM_PANEL_BORDER),
                 })
@@ -160,8 +161,8 @@ class Command:
                 'name': 'label_text',
                 'cap': '??',
                 'font_color': COLOR_FORM_FONT2,
-                'x': 8,
-                'y': 38,
+                'x': FORM_GAP,
+                'y': 26+2*FORM_GAP,
                 })
 
         n = dlg_proc(h, DLG_CTL_ADD, 'label')
@@ -169,8 +170,8 @@ class Command:
                 'name': 'label_rgb',
                 'cap': '??',
                 'font_color': COLOR_FORM_FONT,
-                'x': 8,
-                'y': 58,
+                'x': FORM_GAP,
+                'y': 46+2*FORM_GAP,
                 })
 
         n = dlg_proc(h, DLG_CTL_ADD, 'label')
@@ -178,8 +179,8 @@ class Command:
                 'name': 'label_hls',
                 'cap': '??',
                 'font_color': COLOR_FORM_FONT,
-                'x': 8,
-                'y': 78,
+                'x': FORM_GAP,
+                'y': 66+2*FORM_GAP,
                 })
 
 
@@ -200,18 +201,18 @@ class Command:
                 'name': 'label_text',
                 'cap': '??',
                 'font_color': COLOR_FORM_FONT,
-                'x': 8,
-                'y': 4,
+                'x': FORM_GAP,
+                'y': FORM_GAP,
                 })
 
         n = dlg_proc(h, DLG_CTL_ADD, 'image')
         self.h_img = dlg_proc(h, DLG_CTL_HANDLE, index=n)
         dlg_proc(h, DLG_CTL_PROP_SET, index=n, prop={
                 'name': 'img',
-                'x': 8,
-                'y': 28,
-                'w': FORM_PIC_W-16,
-                'h': FORM_PIC_H-28-4,
+                'x': FORM_GAP,
+                'y': 20+2*FORM_GAP,
+                'w': FORM_PIC_W-2*FORM_GAP,
+                'h': FORM_PIC_H-20-3*FORM_GAP,
                 'props': (
                     True, #center
                     True, #stretch
