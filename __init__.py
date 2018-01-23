@@ -1,14 +1,21 @@
 import re
 import json
+import os
 from cudatext import *
 from .colorcodes import *
 
 MY_TAG = 101 #uniq value for all plugins with ed.hotspots()
+
 REGEX_COLORS = r'(\#[0-9a-f]{3}\b)|(\#[0-9a-f]{6}\b)'
+REGEX_PIC = r'(\'|")[^\'"]+?\.(jpg|jpeg|jpe|jfif|bmp|png|gif|ico)\1'
 re_colors_compiled = re.compile(REGEX_COLORS, re.I)
+re_pic_compiled = re.compile(REGEX_PIC, re.I)
+
 FORM_COLOR_W = 170
 FORM_COLOR_H = 102
 FORM_GAP_OUT = 8
+FORM_PIC_W = 300
+FORM_PIC_H = 240
 COLOR_FORM_BACK = 0x505050
 COLOR_FORM_FONT = 0xE0E0E0
 COLOR_FORM_FONT2 = 0x40E0E0
@@ -19,6 +26,7 @@ class Command:
     def __init__(self):
 
         self.init_form_color()
+        self.init_form_pic()
 
     def on_change_slow(self, ed_self):
 
@@ -35,6 +43,7 @@ class Command:
 
         for nline in range(ed.get_line_count()):
             line = ed.get_text_line(nline)
+
             for item in re_colors_compiled.finditer(line):
                 span = item.span()
                 data = json.dumps({
@@ -50,6 +59,23 @@ class Command:
                             pos=(span[0], nline, span[1], nline)
                             )
                 count += 1
+
+            for item in re_pic_compiled.finditer(line):
+                span = item.span()
+                data = json.dumps({
+                        'pic': item.group(0),
+                        'x': span[0],
+                        'x2': span[1],
+                        'y': nline,
+                        })
+
+                ed.hotspots(HOTSPOT_ADD,
+                            tag=MY_TAG,
+                            tag_str=data,
+                            pos=(span[0], nline, span[1], nline)
+                            )
+                count += 1
+                
         #print('HTML Tooltips: %d items'%count)
 
 
@@ -57,9 +83,24 @@ class Command:
 
         if entered:
             hotspot = ed.hotspots(HOTSPOT_GET_LIST)[hotspot_index]
+            if hotspot['tag'] != MY_TAG: return
 
             data = json.loads(hotspot['tag_str'])
-            self.update_form_color(data['color'])
+            text = data.get('color', '')
+            if text:
+                self.update_form_color(text)
+                h_dlg = self.h_dlg
+            else:
+                text = data.get('pic', '')
+                if text:
+                    self.update_form_pic(text)
+                    h_dlg = self.h_dlg_pic
+                else:
+                    return
+                    
+            prop = dlg_proc(h_dlg, DLG_PROP_GET)
+            form_w = prop['w']
+            form_h = prop['h']
 
             pos_x = data['x']
             pos_y = data['y']
@@ -73,22 +114,23 @@ class Command:
             hint_y = pos[1] + cell_size[1] + FORM_GAP_OUT
 
             #no space on bottom?
-            if hint_y + FORM_COLOR_H > ed_size_y:
-                hint_y = pos[1] - FORM_COLOR_H - FORM_GAP_OUT
+            if hint_y + form_h > ed_size_y:
+                hint_y = pos[1] - form_h - FORM_GAP_OUT
 
             #no space on right?
-            if hint_x + FORM_COLOR_W > ed_size_x:
-                hint_x = ed_size_x - FORM_COLOR_W
+            if hint_x + form_w > ed_size_x:
+                hint_x = ed_size_x - form_w
 
-            dlg_proc(self.h_dlg, DLG_PROP_SET, prop={
-                    'p': ed_self.h,
+            dlg_proc(h_dlg, DLG_PROP_SET, prop={
+                    'p': ed_self.h, #set parent to Editor handle
                     'x': hint_x,
                     'y': hint_y,
                     })
-            dlg_proc(self.h_dlg, DLG_SHOW_NONMODAL)
+            dlg_proc(h_dlg, DLG_SHOW_NONMODAL)
 
         else:
             dlg_proc(self.h_dlg, DLG_HIDE)
+            dlg_proc(self.h_dlg_pic, DLG_HIDE)
 
 
     def init_form_color(self):
@@ -141,6 +183,46 @@ class Command:
                 })
 
 
+    def init_form_pic(self):
+
+        h = dlg_proc(0, DLG_CREATE)
+        self.h_dlg_pic = h
+
+        dlg_proc(h, DLG_PROP_SET, prop={
+                'w': FORM_PIC_W,
+                'h': FORM_PIC_H,
+                'border': False,
+                'color': COLOR_FORM_BACK,
+                })
+
+        n = dlg_proc(h, DLG_CTL_ADD, 'label')
+        dlg_proc(h, DLG_CTL_PROP_SET, index=n, prop={
+                'name': 'label_text',
+                'cap': '??',
+                'font_color': COLOR_FORM_FONT,
+                'x': 8,
+                'y': 4,
+                })
+
+        n = dlg_proc(h, DLG_CTL_ADD, 'image')
+        self.h_img = dlg_proc(h, DLG_CTL_HANDLE, index=n)
+        dlg_proc(h, DLG_CTL_PROP_SET, index=n, prop={
+                'name': 'img',
+                'x': 8,
+                'y': 28,
+                'w': FORM_PIC_W-16,
+                'h': FORM_PIC_H-28-4,
+                'props': (
+                    True, #center
+                    True, #stretch
+                    True, #stretch in
+                    False, #stretch out
+                    True, #keep origin x
+                    True, #keep origin y
+                    )
+                })
+
+
     def update_form_color(self, text):
 
         ncolor = HTMLColorToPILColor(text)
@@ -166,4 +248,27 @@ class Command:
 
         dlg_proc(self.h_dlg, DLG_CTL_PROP_SET, name='label_hls', prop={
                 'cap': 'hsl(%s, %s, %s)' % (h, s, l),
+                })
+
+
+    def update_form_pic(self, text):
+
+        fn = ed.get_filename()
+        if not fn: return
+        #todo: consider os.sep in Win
+        
+        if not text: return
+        if text[0] in '\'"':
+            text = text[1:-1]
+            
+        fn = os.path.join(os.path.dirname(fn), text)
+        if not os.path.isfile(fn):
+            dlg_proc(self.h_dlg_pic, DLG_HIDE)
+            return
+
+        image_proc(self.h_img, IMAGE_LOAD, fn)
+        size_x, size_y = image_proc(self.h_img, IMAGE_GET_SIZE)
+
+        dlg_proc(self.h_dlg_pic, DLG_CTL_PROP_SET, name='label_text', prop={
+                'cap': '%dx%d' % (size_x, size_y),
                 })

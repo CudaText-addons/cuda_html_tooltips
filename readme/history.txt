@@ -1,3 +1,6 @@
 
+2018.01.23
++ supports tooltips for picture files (<img src="....">)
+
 2018.01.21
 init
