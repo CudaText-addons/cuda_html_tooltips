@@ -3,13 +3,12 @@ import json
 from cudatext import *
 from .colorcodes import *
 
-
 MY_TAG = 101 #uniq value for all plugins with ed.hotspots()
 REGEX_COLORS = r'(\#[0-9a-f]{3}\b)|(\#[0-9a-f]{6}\b)'
-re_compiled = re.compile(REGEX_COLORS, re.I)
-FORM_W = 170
-FORM_H = 102
-HINT_PADDING = 8
+re_colors_compiled = re.compile(REGEX_COLORS, re.I)
+FORM_COLOR_W = 170
+FORM_COLOR_H = 102
+FORM_GAP_OUT = 8
 COLOR_FORM_BACK = 0x505050
 COLOR_FORM_FONT = 0xE0E0E0
 COLOR_FORM_FONT2 = 0x40E0E0
@@ -19,27 +18,27 @@ COLOR_FORM_PANEL_BORDER = 0xFFFFFF
 class Command:
     def __init__(self):
 
-        self.init_form()
+        self.init_form_color()
 
     def on_change_slow(self, ed_self):
 
-        self.find_colors()
+        self.find_hotspots()
 
     def on_open(self, ed_self):
 
-        self.find_colors()
+        self.find_hotspots()
 
-    def find_colors(self):
+    def find_hotspots(self):
 
         ed.hotspots(HOTSPOT_DELETE_BY_TAG, tag=MY_TAG)
         count = 0
 
         for nline in range(ed.get_line_count()):
             line = ed.get_text_line(nline)
-            for item in re_compiled.finditer(line):
+            for item in re_colors_compiled.finditer(line):
                 span = item.span()
                 data = json.dumps({
-                        's': item.group(0),
+                        'color': item.group(0),
                         'x': span[0],
                         'x2': span[1],
                         'y': nline,
@@ -60,7 +59,7 @@ class Command:
             hotspot = ed.hotspots(HOTSPOT_GET_LIST)[hotspot_index]
 
             data = json.loads(hotspot['tag_str'])
-            self.update_form(data['s'])
+            self.update_form_color(data['color'])
 
             pos_x = data['x']
             pos_y = data['y']
@@ -71,15 +70,15 @@ class Command:
             ed_size_x = ed_coord[2]-ed_coord[0]
             ed_size_y = ed_coord[3]-ed_coord[1]
             hint_x = pos[0]
-            hint_y = pos[1] + cell_size[1] + HINT_PADDING
+            hint_y = pos[1] + cell_size[1] + FORM_GAP_OUT
 
             #no space on bottom?
-            if hint_y + FORM_H > ed_size_y:
-                hint_y = pos[1] - FORM_H - HINT_PADDING
+            if hint_y + FORM_COLOR_H > ed_size_y:
+                hint_y = pos[1] - FORM_COLOR_H - FORM_GAP_OUT
 
             #no space on right?
-            if hint_x + FORM_W > ed_size_x:
-                hint_x = ed_size_x - FORM_W
+            if hint_x + FORM_COLOR_W > ed_size_x:
+                hint_x = ed_size_x - FORM_COLOR_W
 
             dlg_proc(self.h_dlg, DLG_PROP_SET, prop={
                     'p': ed_self.h,
@@ -92,14 +91,14 @@ class Command:
             dlg_proc(self.h_dlg, DLG_HIDE)
 
 
-    def init_form(self):
+    def init_form_color(self):
 
         h = dlg_proc(0, DLG_CREATE)
         self.h_dlg = h
 
         dlg_proc(h, DLG_PROP_SET, prop={
-                'w': FORM_W,
-                'h': FORM_H,
+                'w': FORM_COLOR_W,
+                'h': FORM_COLOR_H,
                 'border': False,
                 'color': COLOR_FORM_BACK,
                 })
@@ -109,7 +108,7 @@ class Command:
                 'name': 'panel_color',
                 'x': 8,
                 'y': 8,
-                'w': FORM_W-16,
+                'w': FORM_COLOR_W-16,
                 'h': 26,
                 'props': (1,0x808080,0x202020,COLOR_FORM_PANEL_BORDER),
                 })
@@ -141,7 +140,8 @@ class Command:
                 'y': 78,
                 })
 
-    def update_form(self, text):
+
+    def update_form_color(self, text):
 
         ncolor = HTMLColorToPILColor(text)
         r, g, b = HTMLColorToRGB(text)
