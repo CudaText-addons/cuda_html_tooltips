@@ -8,8 +8,8 @@ from html.parser import HTMLParser
 MY_TAG = 101 #uniq value for all plugins with ed.hotspots()
 
 REGEX_COLORS = r'(\#[0-9a-f]{3}\b)|(\#[0-9a-f]{6}\b)'
-REGEX_PIC = r'(\'|")[^\'"]+?\.(jpg|jpeg|jpe|jfif|bmp|png|gif|ico)\1'
-REGEX_PIC2 = r'\([^\'"\(\)]+?\.(jpg|jpeg|jpe|jfif|bmp|png|gif|ico)\)'
+REGEX_PIC = r'(\'|")[^\'"]+?\.(png|gif|jpg|jpeg|bmp|ico)\1'
+REGEX_PIC2 = r'\([^\'"\(\)]+?\.(png|gif|jpg|jpeg|bmp|ico)\)'
 REGEX_ENT = r'&\w+;'
 
 html_parser = HTMLParser()
