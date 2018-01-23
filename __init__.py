@@ -67,8 +67,6 @@ class Command:
                 for item in re_pic_compiled.finditer(line):
                     span = item.span()
                     text = item.group(0)
-                    
-                    #don't support online refs
                     if 'http://' in text: continue
                     if 'https://' in text: continue
                 
@@ -263,21 +261,27 @@ class Command:
 
     def update_form_pic(self, text):
 
-        fn = ed.get_filename()
-        if not fn: return False
-        
-        if os.sep!='/':
-            text = text.replace('/', os.sep)
-        if text[0] in '\'"':
-            text = text[1:-1]
-            
-        fn = os.path.join(os.path.dirname(fn), text)
-        if not os.path.isfile(fn): return False
+        fn = self.get_pic_filename(text)
+        if not os.path.isfile(fn):
+            return False
 
         image_proc(self.h_img, IMAGE_LOAD, fn)
         size_x, size_y = image_proc(self.h_img, IMAGE_GET_SIZE)
+        if not size_x:
+            return False
 
         dlg_proc(self.h_dlg_pic, DLG_CTL_PROP_SET, name='label_text', prop={
                 'cap': '%dx%d' % (size_x, size_y),
                 })
         return True
+
+
+    def get_pic_filename(self, text):
+    
+        if os.sep!='/':
+            text = text.replace('/', os.sep)
+        if text[0] in '\'"':
+            text = text[1:-1]
+            
+        dirname = os.path.dirname(ed.get_filename())
+        return os.path.join(dirname, text)
