@@ -271,7 +271,7 @@ class Command:
             return False
 
         dlg_proc(self.h_dlg_pic, DLG_CTL_PROP_SET, name='label_text', prop={
-                'cap': '%dx%d' % (size_x, size_y),
+                'cap': '%d×%d' % (size_x, size_y),
                 })
         return True
 
