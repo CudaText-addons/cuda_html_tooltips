@@ -8,12 +8,14 @@ from html.parser import HTMLParser
 MY_TAG = 101 #uniq value for all plugins with ed.hotspots()
 
 REGEX_COLORS = r'(\#[0-9a-f]{3}\b)|(\#[0-9a-f]{6}\b)'
+REGEX_RGB = r'\brgba?\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*(,\s*\d+\s*)?\)'
 REGEX_PIC = r'(\'|")[^\'"]+?\.(png|gif|jpg|jpeg|bmp|ico)\1'
 REGEX_PIC_CSS = r'\([^\'"\(\)]+?\.(png|gif|jpg|jpeg|bmp|ico)\)'
 REGEX_ENT = r'&\w+;'
 
 html_parser = HTMLParser()
 re_colors_compiled = re.compile(REGEX_COLORS, re.I)
+re_rgb_compiled = re.compile(REGEX_RGB, re.I)
 re_pic_compiled = re.compile(REGEX_PIC, re.I)
 re_pic_css_compiled = re.compile(REGEX_PIC_CSS, re.I)
 re_ent_compiled = re.compile(REGEX_ENT, 0)
@@ -77,6 +79,25 @@ class Command:
                 span = item.span()
                 data = json.dumps({
                         'color': item.group(0),
+                        'x': span[0],
+                        'y': nline,
+                        })
+
+                ed.hotspots(HOTSPOT_ADD,
+                            tag=MY_TAG,
+                            tag_str=data,
+                            pos=(span[0], nline, span[1], nline)
+                            )
+                count += 1
+
+            #find rgb
+            for item in re_rgb_compiled.finditer(line):
+                span = item.span()
+                data = json.dumps({
+                        'rgb': item.group(0),
+                        'r': int(item.group(1)),
+                        'g': int(item.group(2)),
+                        'b': int(item.group(3)),
                         'x': span[0],
                         'y': nline,
                         })
@@ -157,7 +178,12 @@ class Command:
                         if not self.update_form_ent(text): return
                         h_dlg = self.h_dlg_ent
                     else:
-                        return
+                        text = data.get('rgb', '')
+                        if text:
+                            self.update_form_rgb(text, data['r'], data['g'], data['b'])
+                            h_dlg = self.h_dlg_color
+                        else:
+                            return
 
             prop = dlg_proc(h_dlg, DLG_PROP_GET)
             form_w = prop['w']
@@ -314,6 +340,14 @@ class Command:
 
         ncolor = HTMLColorToPILColor(text)
         r, g, b = HTMLColorToRGB(text)
+        self.update_form_color_ex(text, ncolor, r, g, b)
+
+    def update_form_rgb(self, text, r, g, b):
+
+        ncolor = RGBToPILColor((r, g, b))
+        self.update_form_color_ex(text, ncolor, r, g, b)
+
+    def update_form_color_ex(self, text, ncolor, r, g, b):
 
         #let's get HSL like here https://www.rapidtables.com/convert/color/rgb-to-hsl.html
         h, l, s = RGBToHLS(r, g, b)
