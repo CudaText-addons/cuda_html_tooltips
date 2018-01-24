@@ -1,5 +1,8 @@
 
 2018.01.24
++ support fragments rgb(n,n,n) and rgba(n,n,n,a)
+
+2018.01.24
 + supports HTML entities like &copy; &amp;
 + supports CSS picture filenames in () brackets
 

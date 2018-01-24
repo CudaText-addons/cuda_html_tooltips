@@ -3,8 +3,10 @@ It works in HTML/CSS files (any lexer name with words "HTML", "CSS").
 When you move mouse cursor over some fragments, tooltip appears.
 
 1) It finds HTML color values: 
-  #rgb 
-  #rrggbb
+  #RGB 
+  #RRGGBB
+  rgb(n, n, n)
+  rgba(n, n, n, n)  
   and adds colored tooltips for them.
 2) It finds HTML picture refs: src="..." or href="..."; and adds picture tooltips for filenames.
   Internally, it finds any quoted picture filenames (png, gif, jpeg, bmp, ico) without testing tags.
