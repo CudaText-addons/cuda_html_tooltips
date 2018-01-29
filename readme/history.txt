@@ -1,4 +1,7 @@
 
+2018.01.29
++ support lexers Sass, LESS too
+
 2018.01.24
 + support fragments rgb(n,n,n) and rgba(n,n,n,a)
 
