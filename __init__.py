@@ -29,6 +29,7 @@ FORM_ENT_H = 50
 FORM_ENT_FONT_SIZE = 28
 FORM_GAP = 4
 FORM_GAP_OUT = 8
+FORM_GAP_OUT_COLOR = FORM_GAP_OUT # -1 dont help
 COLOR_FORM_BACK = 0x505050
 COLOR_FORM_FONT = 0xE0E0E0
 COLOR_FORM_FONT2 = 0x40E0E0
@@ -193,16 +194,17 @@ class Command:
             pos_y = data['y']
             pos = ed.convert(CONVERT_CARET_TO_PIXELS, x=pos_x, y=pos_y)
 
+            gap_out = FORM_GAP_OUT_COLOR if h_dlg==self.h_dlg_color else FORM_GAP_OUT
             cell_size = ed.get_prop(PROP_CELL_SIZE)
             ed_coord = ed.get_prop(PROP_COORDS)
             ed_size_x = ed_coord[2]-ed_coord[0]
             ed_size_y = ed_coord[3]-ed_coord[1]
             hint_x = pos[0]
-            hint_y = pos[1] + cell_size[1] + FORM_GAP_OUT
+            hint_y = pos[1] + cell_size[1] + gap_out
 
             #no space on bottom?
             if hint_y + form_h > ed_size_y:
-                hint_y = pos[1] - form_h - FORM_GAP_OUT
+                hint_y = pos[1] - form_h - gap_out
 
             #no space on right?
             if hint_x + form_w > ed_size_x:
