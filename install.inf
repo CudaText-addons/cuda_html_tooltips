@@ -1,6 +1,6 @@
 [info]
 title=HTML Tooltips
-desc=In HTML/CSS files, plugin shows tooltips for: HTML colors (#rgb, #rrggbb), picture filenames, etc
+desc=In HTML/CSS files, plugin shows tooltips for: HTML color values, HTML entities, picture filenames
 type=cudatext-plugin
 subdir=cuda_html_tooltips
 homepage=https://github.com/CudaText-addons/cuda_html_tooltips
