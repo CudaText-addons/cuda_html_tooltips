@@ -29,7 +29,7 @@ FORM_ENT_H = 50
 FORM_ENT_FONT_SIZE = 28
 FORM_GAP = 4
 FORM_GAP_OUT = 8
-FORM_GAP_OUT_COLOR = FORM_GAP_OUT # -1 dont help
+FORM_GAP_OUT_COLOR = -1 #FORM_GAP_OUT
 COLOR_FORM_BACK = 0x505050
 COLOR_FORM_FONT = 0xE0E0E0
 COLOR_FORM_FONT2 = 0x40E0E0
@@ -158,8 +158,12 @@ class Command:
     def on_hotspot(self, ed_self, entered, hotspot_index):
 
         if not entered:
+            allow = self.is_mouse_in_form(self.h_dlg_color)
+            if allow: return
             self.hide_forms()
+
         else:
+            self.hide_forms()
             hotspot = ed.hotspots(HOTSPOT_GET_LIST)[hotspot_index]
             if hotspot['tag'] != MY_TAG: return
 
@@ -407,3 +411,16 @@ class Command:
 
         dirname = os.path.dirname(ed.get_filename())
         return os.path.join(dirname, text)
+
+
+    def is_mouse_in_form(self, h_dlg):
+
+        prop = dlg_proc(h_dlg, DLG_PROP_GET)
+        w = prop['w']
+        h = prop['h']
+
+        x, y = app_proc(PROC_GET_MOUSE_POS, '')
+        x, y = dlg_proc(h_dlg, DLG_COORD_SCREEN_TO_LOCAL, index=x, index2=y)
+
+        return 0<=x<w and 0<=y<h
+
