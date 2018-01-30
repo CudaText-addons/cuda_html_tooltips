@@ -4,9 +4,9 @@ desc=In HTML/CSS files, plugin shows tooltips for: HTML colors (#rgb, #rrggbb), 
 type=cudatext-plugin
 subdir=cuda_html_tooltips
 homepage=https://github.com/CudaText-addons/cuda_html_tooltips
-api=1.0.222
+api=1.0.218
 
 [item1]
 section=events
-events=on_open,on_change_slow,on_hotspot
+events=on_open,on_change_slow,on_hotspot,on_mouse_exit
 lexers=regex:(.*HTML.*)|CSS|SCSS|Sass|LESS

@@ -155,6 +155,12 @@ class Command:
             #print('HTML Tooltips: %d items'%count)
 
 
+    def dlgcolor_mouse_exit(self, id_dlg, id_ctl, data='', info=''):
+
+        if not self.is_mouse_in_form(id_dlg):
+            dlg_proc(id_dlg, DLG_HIDE)
+
+
     def on_hotspot(self, ed_self, entered, hotspot_index):
 
         if not entered:
@@ -239,6 +245,7 @@ class Command:
                 'h': FORM_COLOR_H,
                 'border': False,
                 'color': COLOR_FORM_BACK,
+                'on_mouse_exit': self.dlgcolor_mouse_exit,
                 })
 
         n = dlg_proc(h, DLG_CTL_ADD, 'colorpanel')
@@ -416,6 +423,7 @@ class Command:
     def is_mouse_in_form(self, h_dlg):
 
         prop = dlg_proc(h_dlg, DLG_PROP_GET)
+        if not prop['vis']: return False
         w = prop['w']
         h = prop['h']
 
@@ -423,4 +431,3 @@ class Command:
         x, y = dlg_proc(h_dlg, DLG_COORD_SCREEN_TO_LOCAL, index=x, index2=y)
 
         return 0<=x<w and 0<=y<h
-
