@@ -22,8 +22,10 @@ re_ent_compiled = re.compile(REGEX_ENT, 0)
 
 FORM_COLOR_W = 170
 FORM_COLOR_H = 100
-FORM_PIC_W = 300
-FORM_PIC_H = 240
+FORM_PIC_W_MAX = 270
+FORM_PIC_W_MIN = 50
+FORM_PIC_H_MAX = 220
+FORM_PIC_H_MIN = 50
 FORM_ENT_W = 50
 FORM_ENT_H = 50
 FORM_ENT_FONT_SIZE = 28
@@ -293,8 +295,8 @@ class Command:
         self.h_dlg_pic = h
 
         dlg_proc(h, DLG_PROP_SET, prop={
-                'w': FORM_PIC_W,
-                'h': FORM_PIC_H,
+                'w': FORM_PIC_W_MAX,
+                'h': FORM_PIC_H_MAX,
                 'border': False,
                 'color': COLOR_FORM_BACK,
                 })
@@ -313,7 +315,9 @@ class Command:
         dlg_proc(h, DLG_CTL_PROP_SET, index=n, prop={
                 'name': 'img',
                 'align': ALIGN_CLIENT,
-                'sp_a': FORM_GAP//2,
+                'sp_l': FORM_GAP,
+                'sp_r': FORM_GAP,
+                'sp_b': FORM_GAP,
                 'props': (
                     True, #center
                     True, #stretch
@@ -392,12 +396,25 @@ class Command:
 
         image_proc(self.h_img, IMAGE_LOAD, fn)
         size_x, size_y = image_proc(self.h_img, IMAGE_GET_SIZE)
-        if not size_x:
+        if not size_x or not size_y:
             return False
 
         dlg_proc(self.h_dlg_pic, DLG_CTL_PROP_SET, name='label_text', prop={
                 'cap': '%d×%d' % (size_x, size_y),
                 })
+                
+        label_h = dlg_proc(self.h_dlg_pic, DLG_CTL_PROP_GET, name='label_text')['h']
+                
+        #ratio_xy = size_x/size_y 
+        #if size_x<FORM_PIC_W_MAX and size_y<FORM_PIC_H_MAX:
+        form_w = min(FORM_PIC_W_MAX, max(FORM_PIC_W_MIN, size_x)) + 2*FORM_GAP
+        form_h = min(FORM_PIC_H_MAX, max(FORM_PIC_H_MIN, size_y)) + 3*FORM_GAP + label_h
+        
+        dlg_proc(self.h_dlg_pic, DLG_PROP_SET, prop={
+            'w': form_w,
+            'h': form_h,
+            })
+                
         return True
 
 
