@@ -304,18 +304,16 @@ class Command:
                 'name': 'label_text',
                 'cap': '??',
                 'font_color': COLOR_FORM_FONT,
-                'x': FORM_GAP,
-                'y': FORM_GAP,
+                'align': ALIGN_TOP,
+                'sp_a': FORM_GAP,
                 })
 
         n = dlg_proc(h, DLG_CTL_ADD, 'image')
         self.h_img = dlg_proc(h, DLG_CTL_HANDLE, index=n)
         dlg_proc(h, DLG_CTL_PROP_SET, index=n, prop={
                 'name': 'img',
-                'x': FORM_GAP,
-                'y': 20+2*FORM_GAP,
-                'w': FORM_PIC_W-2*FORM_GAP,
-                'h': FORM_PIC_H-20-3*FORM_GAP,
+                'align': ALIGN_CLIENT,
+                'sp_a': FORM_GAP//2,
                 'props': (
                     True, #center
                     True, #stretch
