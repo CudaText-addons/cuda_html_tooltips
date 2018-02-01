@@ -28,8 +28,9 @@ FORM_ENT_W = 50
 FORM_ENT_H = 50
 FORM_ENT_FONT_SIZE = 28
 FORM_GAP = 4
-FORM_GAP_OUT = 8
-FORM_GAP_OUT_COLOR = -1 #FORM_GAP_OUT
+FORM_GAP_OUT = 0
+FORM_GAP_OUT_COLOR = 0 #-1 
+FORM_COLOR_KEEP = False
 COLOR_FORM_BACK = 0x505050
 COLOR_FORM_FONT = 0xE0E0E0
 COLOR_FORM_FONT2 = 0x40E0E0
@@ -164,7 +165,7 @@ class Command:
     def on_hotspot(self, ed_self, entered, hotspot_index):
 
         if not entered:
-            allow = self.is_mouse_in_form(self.h_dlg_color)
+            allow = FORM_COLOR_KEEP and self.is_mouse_in_form(self.h_dlg_color)
             if allow: return
             self.hide_forms()
 
