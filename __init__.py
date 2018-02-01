@@ -41,8 +41,10 @@ COLOR_FORM_PANEL_BORDER = 0xFFFFFF
 
 
 class Command:
+
     def __init__(self):
 
+        self.load_config()
         self.init_form_color()
         self.init_form_pic()
         self.init_form_ent()
@@ -470,3 +472,34 @@ class Command:
             file_open(fn_ini)
         else:
             print('Cannot find file:', fn_ini)
+
+
+    def load_config(self):
+    
+        global COLOR_FORM_BACK
+        global COLOR_FORM_FONT
+        global COLOR_FORM_FONT2
+        global COLOR_FORM_PANEL_BORDER
+
+        global FORM_ENT_W
+        global FORM_ENT_H
+        global FORM_ENT_FONT_SIZE
+
+        global FORM_PIC_W_MAX
+        global FORM_PIC_W_MIN
+        global FORM_PIC_H_MAX
+        global FORM_PIC_H_MIN
+    
+        COLOR_FORM_BACK = HTMLColorToPILColor(ini_read(fn_ini, 'colors', 'back', PILColorToHTMLColor(COLOR_FORM_BACK)))
+        COLOR_FORM_FONT = HTMLColorToPILColor(ini_read(fn_ini, 'colors', 'font', PILColorToHTMLColor(COLOR_FORM_FONT)))
+        COLOR_FORM_FONT2 = HTMLColorToPILColor(ini_read(fn_ini, 'colors', 'font2', PILColorToHTMLColor(COLOR_FORM_FONT2)))
+        COLOR_FORM_PANEL_BORDER = HTMLColorToPILColor(ini_read(fn_ini, 'colors', 'panel_border', PILColorToHTMLColor(COLOR_FORM_PANEL_BORDER)))
+
+        FORM_ENT_W = int(ini_read(fn_ini, 'op', 'entity_size_x', str(FORM_ENT_W)))
+        FORM_ENT_H = int(ini_read(fn_ini, 'op', 'entity_size_y', str(FORM_ENT_H)))
+        FORM_ENT_FONT_SIZE = int(ini_read(fn_ini, 'op', 'entity_font_size', str(FORM_ENT_FONT_SIZE)))
+
+        FORM_PIC_W_MAX = int(ini_read(fn_ini, 'op', 'pic_size_x_max', str(FORM_PIC_W_MAX)))
+        FORM_PIC_W_MIN = int(ini_read(fn_ini, 'op', 'pic_size_x_min', str(FORM_PIC_W_MIN)))
+        FORM_PIC_H_MAX = int(ini_read(fn_ini, 'op', 'pic_size_y_max', str(FORM_PIC_H_MAX)))
+        FORM_PIC_H_MIN = int(ini_read(fn_ini, 'op', 'pic_size_y_min', str(FORM_PIC_H_MIN)))
