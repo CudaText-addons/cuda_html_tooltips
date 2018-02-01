@@ -5,6 +5,7 @@ from cudatext import *
 from .colorcodes import *
 from html.parser import HTMLParser
 
+fn_ini = os.path.join(app_path(APP_DIR_SETTINGS), 'cuda_html_tooltips.ini')
 MY_TAG = 101 #uniq value for all plugins with ed.hotspots()
 
 REGEX_COLORS = r'(\#[0-9a-f]{3}\b)|(\#[0-9a-f]{6}\b)'
@@ -447,3 +448,25 @@ class Command:
         x, y = dlg_proc(h_dlg, DLG_COORD_SCREEN_TO_LOCAL, index=x, index2=y)
 
         return 0<=x<w and 0<=y<h
+
+
+    def edit_config(self):
+    
+        ini_write(fn_ini, 'colors', 'back', PILColorToHTMLColor(COLOR_FORM_BACK))
+        ini_write(fn_ini, 'colors', 'font', PILColorToHTMLColor(COLOR_FORM_FONT))
+        ini_write(fn_ini, 'colors', 'font2', PILColorToHTMLColor(COLOR_FORM_FONT2))
+        ini_write(fn_ini, 'colors', 'panel_border', PILColorToHTMLColor(COLOR_FORM_PANEL_BORDER))
+
+        ini_write(fn_ini, 'op', 'entity_size_x', str(FORM_ENT_W))
+        ini_write(fn_ini, 'op', 'entity_size_y', str(FORM_ENT_H))
+        ini_write(fn_ini, 'op', 'entity_font_size', str(FORM_ENT_FONT_SIZE))
+
+        ini_write(fn_ini, 'op', 'pic_size_x_max', str(FORM_PIC_W_MAX))
+        ini_write(fn_ini, 'op', 'pic_size_x_min', str(FORM_PIC_W_MIN))
+        ini_write(fn_ini, 'op', 'pic_size_y_max', str(FORM_PIC_H_MAX))
+        ini_write(fn_ini, 'op', 'pic_size_y_min', str(FORM_PIC_H_MIN))
+
+        if os.path.isfile(fn_ini):
+            file_open(fn_ini)
+        else:
+            print('Cannot find file:', fn_ini)

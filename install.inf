@@ -10,3 +10,9 @@ api=1.0.222
 section=events
 events=on_open,on_change_slow,on_hotspot,on_mouse_exit
 lexers=regex:(.*HTML.*)|CSS|SCSS|Sass|LESS
+
+[item2]
+section=commands
+caption=HTML Tooltips\Config
+method=edit_config
+menu=o
