@@ -269,7 +269,9 @@ class Command:
                 'cap': '?',
                 'font_color': COLOR_FORM_FONT2,
                 'align': ALIGN_TOP,
-                'sp_a': FORM_GAP,
+                'sp_l': FORM_GAP,
+                'sp_r': FORM_GAP,
+                'sp_b': FORM_GAP,
                 'y': 200,
                 })
 
@@ -279,7 +281,9 @@ class Command:
                 'cap': '??',
                 'font_color': COLOR_FORM_FONT,
                 'align': ALIGN_TOP,
-                'sp_a': FORM_GAP,
+                'sp_l': FORM_GAP,
+                'sp_r': FORM_GAP,
+                'sp_b': FORM_GAP,
                 'y': 220,
                 })
 
@@ -289,7 +293,9 @@ class Command:
                 'cap': '??',
                 'font_color': COLOR_FORM_FONT,
                 'align': ALIGN_TOP,
-                'sp_a': FORM_GAP,
+                'sp_l': FORM_GAP,
+                'sp_r': FORM_GAP,
+                'sp_b': FORM_GAP,
                 'y': 240,
                 })
 
