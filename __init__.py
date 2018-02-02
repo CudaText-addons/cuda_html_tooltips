@@ -231,6 +231,8 @@ class Command:
                     'y': hint_y,
                     })
             dlg_proc(h_dlg, DLG_SHOW_NONMODAL)
+            if h_dlg==self.h_dlg_color:
+                self.update_form_color_size()
 
 
     def hide_forms(self):
@@ -366,14 +368,16 @@ class Command:
         ncolor = RGBToPILColor((r, g, b))
         self.update_form_color_ex(text, ncolor, r, g, b)
 
+    def update_form_color_size(self):
+
+        h_dlg = self.h_dlg_color
+        prop = dlg_proc(h_dlg, DLG_CTL_PROP_GET, name='label_hls')
+        need_size = prop['y']+prop['h']+FORM_GAP
+        dlg_proc(h_dlg, DLG_PROP_SET, prop={'h': need_size})
+
     def update_form_color_ex(self, text, ncolor, r, g, b):
 
-        h = self.h_dlg_color
-
-        #adjust form height to last label
-        prop = dlg_proc(h, DLG_CTL_PROP_GET, name='label_hls')
-        need_size = prop['y']+prop['h']+FORM_GAP
-        dlg_proc(h, DLG_PROP_SET, prop={'h': need_size})
+        h_dlg = self.h_dlg_color
 
         #let's get HSL like here https://www.rapidtables.com/convert/color/rgb-to-hsl.html
         h, l, s = RGBToHLS(r, g, b)
@@ -381,19 +385,19 @@ class Command:
         l = float_to_percent(l)
         s = float_to_percent(s)
 
-        dlg_proc(self.h_dlg_color, DLG_CTL_PROP_SET, name='panel_color', prop={
+        dlg_proc(h_dlg, DLG_CTL_PROP_SET, name='panel_color', prop={
                 'color': ncolor,
                 })
 
-        dlg_proc(self.h_dlg_color, DLG_CTL_PROP_SET, name='label_text', prop={
+        dlg_proc(h_dlg, DLG_CTL_PROP_SET, name='label_text', prop={
                 'cap': text,
                 })
 
-        dlg_proc(self.h_dlg_color, DLG_CTL_PROP_SET, name='label_rgb', prop={
+        dlg_proc(h_dlg, DLG_CTL_PROP_SET, name='label_rgb', prop={
                 'cap': 'rgb(%d, %d, %d)' % (r, g, b),
                 })
 
-        dlg_proc(self.h_dlg_color, DLG_CTL_PROP_SET, name='label_hls', prop={
+        dlg_proc(h_dlg, DLG_CTL_PROP_SET, name='label_hls', prop={
                 'cap': 'hsl(%s, %s, %s)' % (h, s, l),
                 })
 
