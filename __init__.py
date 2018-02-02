@@ -22,7 +22,6 @@ re_pic_css_compiled = re.compile(REGEX_PIC_CSS, re.I)
 re_ent_compiled = re.compile(REGEX_ENT, 0)
 
 FORM_COLOR_W = 170
-FORM_COLOR_H = 100
 FORM_PIC_W_MAX = 270
 FORM_PIC_W_MIN = 50
 FORM_PIC_H_MAX = 220
@@ -32,7 +31,7 @@ FORM_ENT_H = 50
 FORM_ENT_FONT_SIZE = 28
 FORM_GAP = 4
 FORM_GAP_OUT = 0
-FORM_GAP_OUT_COLOR = 0 #-1 
+FORM_GAP_OUT_COLOR = 0 #-1
 FORM_COLOR_KEEP = False
 COLOR_FORM_BACK = 0x505050
 COLOR_FORM_FONT = 0xE0E0E0
@@ -248,7 +247,6 @@ class Command:
 
         dlg_proc(h, DLG_PROP_SET, prop={
                 'w': FORM_COLOR_W,
-                'h': FORM_COLOR_H,
                 'border': False,
                 'color': COLOR_FORM_BACK,
                 'on_mouse_exit': self.dlgcolor_mouse_exit,
@@ -257,20 +255,20 @@ class Command:
         n = dlg_proc(h, DLG_CTL_ADD, 'colorpanel')
         dlg_proc(h, DLG_CTL_PROP_SET, index=n, prop={
                 'name': 'panel_color',
-                'x': FORM_GAP,
-                'y': FORM_GAP,
-                'w': FORM_COLOR_W-2*FORM_GAP,
-                'h': 26,
+                'align': ALIGN_TOP,
+                'sp_a': FORM_GAP,
+                'h': 25,
                 'props': (1,0x808080,0x202020,COLOR_FORM_PANEL_BORDER),
                 })
 
         n = dlg_proc(h, DLG_CTL_ADD, 'label')
         dlg_proc(h, DLG_CTL_PROP_SET, index=n, prop={
                 'name': 'label_text',
-                'cap': '??',
+                'cap': '?',
                 'font_color': COLOR_FORM_FONT2,
-                'x': FORM_GAP,
-                'y': 26+2*FORM_GAP,
+                'align': ALIGN_TOP,
+                'sp_a': FORM_GAP,
+                'y': 200,
                 })
 
         n = dlg_proc(h, DLG_CTL_ADD, 'label')
@@ -278,8 +276,9 @@ class Command:
                 'name': 'label_rgb',
                 'cap': '??',
                 'font_color': COLOR_FORM_FONT,
-                'x': FORM_GAP,
-                'y': 46+2*FORM_GAP,
+                'align': ALIGN_TOP,
+                'sp_a': FORM_GAP,
+                'y': 220,
                 })
 
         n = dlg_proc(h, DLG_CTL_ADD, 'label')
@@ -287,8 +286,9 @@ class Command:
                 'name': 'label_hls',
                 'cap': '??',
                 'font_color': COLOR_FORM_FONT,
-                'x': FORM_GAP,
-                'y': 66+2*FORM_GAP,
+                'align': ALIGN_TOP,
+                'sp_a': FORM_GAP,
+                'y': 240,
                 })
 
 
@@ -368,6 +368,13 @@ class Command:
 
     def update_form_color_ex(self, text, ncolor, r, g, b):
 
+        h = self.h_dlg_color
+
+        #adjust form height to last label
+        prop = dlg_proc(h, DLG_CTL_PROP_GET, name='label_hls')
+        need_size = prop['y']+prop['h']+FORM_GAP
+        dlg_proc(h, DLG_PROP_SET, prop={'h': need_size})
+
         #let's get HSL like here https://www.rapidtables.com/convert/color/rgb-to-hsl.html
         h, l, s = RGBToHLS(r, g, b)
         h = float_to_degrees(h)
@@ -405,19 +412,19 @@ class Command:
         dlg_proc(self.h_dlg_pic, DLG_CTL_PROP_SET, name='label_text', prop={
                 'cap': '%d×%d' % (size_x, size_y),
                 })
-                
+
         label_h = dlg_proc(self.h_dlg_pic, DLG_CTL_PROP_GET, name='label_text')['h']
-                
-        #ratio_xy = size_x/size_y 
+
+        #ratio_xy = size_x/size_y
         #if size_x<FORM_PIC_W_MAX and size_y<FORM_PIC_H_MAX:
         form_w = min(FORM_PIC_W_MAX, max(FORM_PIC_W_MIN, size_x)) + 2*FORM_GAP
         form_h = min(FORM_PIC_H_MAX, max(FORM_PIC_H_MIN, size_y)) + 3*FORM_GAP + label_h
-        
+
         dlg_proc(self.h_dlg_pic, DLG_PROP_SET, prop={
             'w': form_w,
             'h': form_h,
             })
-                
+
         return True
 
 
@@ -453,7 +460,7 @@ class Command:
 
 
     def edit_config(self):
-    
+
         ini_write(fn_ini, 'colors', 'back', PILColorToHTMLColor(COLOR_FORM_BACK))
         ini_write(fn_ini, 'colors', 'font', PILColorToHTMLColor(COLOR_FORM_FONT))
         ini_write(fn_ini, 'colors', 'font2', PILColorToHTMLColor(COLOR_FORM_FONT2))
@@ -475,7 +482,7 @@ class Command:
 
 
     def load_config(self):
-    
+
         global COLOR_FORM_BACK
         global COLOR_FORM_FONT
         global COLOR_FORM_FONT2
@@ -489,7 +496,7 @@ class Command:
         global FORM_PIC_W_MIN
         global FORM_PIC_H_MAX
         global FORM_PIC_H_MIN
-    
+
         COLOR_FORM_BACK = HTMLColorToPILColor(ini_read(fn_ini, 'colors', 'back', PILColorToHTMLColor(COLOR_FORM_BACK)))
         COLOR_FORM_FONT = HTMLColorToPILColor(ini_read(fn_ini, 'colors', 'font', PILColorToHTMLColor(COLOR_FORM_FONT)))
         COLOR_FORM_FONT2 = HTMLColorToPILColor(ini_read(fn_ini, 'colors', 'font2', PILColorToHTMLColor(COLOR_FORM_FONT2)))
