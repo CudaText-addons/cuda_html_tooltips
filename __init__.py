@@ -22,6 +22,7 @@ re_pic_css_compiled = re.compile(REGEX_PIC_CSS, re.I)
 re_ent_compiled = re.compile(REGEX_ENT, 0)
 
 FORM_COLOR_W = 170
+FORM_COLOR_H = 25
 FORM_PIC_W_MAX = 270
 FORM_PIC_W_MIN = 50
 FORM_PIC_H_MAX = 220
@@ -248,7 +249,7 @@ class Command:
         self.h_dlg_color = h
 
         dlg_proc(h, DLG_PROP_SET, prop={
-                'w': FORM_COLOR_W,
+                'w': FORM_COLOR_W+2*FORM_GAP,
                 'border': False,
                 'color': COLOR_FORM_BACK,
                 'on_mouse_exit': self.dlgcolor_mouse_exit,
@@ -259,7 +260,7 @@ class Command:
                 'name': 'panel_color',
                 'align': ALIGN_TOP,
                 'sp_a': FORM_GAP,
-                'h': 25,
+                'h': FORM_COLOR_H,
                 'props': (1,0x808080,0x202020,COLOR_FORM_PANEL_BORDER),
                 })
 
@@ -476,6 +477,9 @@ class Command:
         ini_write(fn_ini, 'colors', 'font2', PILColorToHTMLColor(COLOR_FORM_FONT2))
         ini_write(fn_ini, 'colors', 'panel_border', PILColorToHTMLColor(COLOR_FORM_PANEL_BORDER))
 
+        ini_write(fn_ini, 'op', 'color_size_x', str(FORM_COLOR_W))
+        ini_write(fn_ini, 'op', 'color_size_y', str(FORM_COLOR_H))
+
         ini_write(fn_ini, 'op', 'entity_size_x', str(FORM_ENT_W))
         ini_write(fn_ini, 'op', 'entity_size_y', str(FORM_ENT_H))
         ini_write(fn_ini, 'op', 'entity_font_size', str(FORM_ENT_FONT_SIZE))
@@ -498,6 +502,9 @@ class Command:
         global COLOR_FORM_FONT2
         global COLOR_FORM_PANEL_BORDER
 
+        global FORM_COLOR_W
+        global FORM_COLOR_H
+
         global FORM_ENT_W
         global FORM_ENT_H
         global FORM_ENT_FONT_SIZE
@@ -511,6 +518,9 @@ class Command:
         COLOR_FORM_FONT = HTMLColorToPILColor(ini_read(fn_ini, 'colors', 'font', PILColorToHTMLColor(COLOR_FORM_FONT)))
         COLOR_FORM_FONT2 = HTMLColorToPILColor(ini_read(fn_ini, 'colors', 'font2', PILColorToHTMLColor(COLOR_FORM_FONT2)))
         COLOR_FORM_PANEL_BORDER = HTMLColorToPILColor(ini_read(fn_ini, 'colors', 'panel_border', PILColorToHTMLColor(COLOR_FORM_PANEL_BORDER)))
+
+        FORM_COLOR_W = int(ini_read(fn_ini, 'op', 'color_size_x', str(FORM_COLOR_W)))
+        FORM_COLOR_H = int(ini_read(fn_ini, 'op', 'color_size_y', str(FORM_COLOR_H)))
 
         FORM_ENT_W = int(ini_read(fn_ini, 'op', 'entity_size_x', str(FORM_ENT_W)))
         FORM_ENT_H = int(ini_read(fn_ini, 'op', 'entity_size_y', str(FORM_ENT_H)))

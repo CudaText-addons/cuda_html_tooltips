@@ -1,4 +1,7 @@
 
+2018.02.04
++ added 2 options for size of color-preview-rectangle
+
 2018.02.02
 - fix color-preview for high-DPI mode
 
