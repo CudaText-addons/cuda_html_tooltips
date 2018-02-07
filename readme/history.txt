@@ -1,4 +1,7 @@
 
+2018.02.07
+- fix: didn't see pics in Sass/Less lexer
+
 2018.02.04
 + added 2 options for size of color-preview-rectangle
 
