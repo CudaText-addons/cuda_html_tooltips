@@ -8,7 +8,7 @@ api=1.0.222
 
 [item1]
 section=events
-events=on_open,on_change_slow,on_hotspot,on_mouse_exit
+events=on_open,on_change_slow,on_hotspot
 lexers=regex:(.*HTML.*)|CSS|SCSS|Sass|LESS
 
 [item2]
