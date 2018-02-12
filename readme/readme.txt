@@ -13,9 +13,17 @@ When you move mouse cursor over some fragments, tooltip appears.
   Online links (http:, https:) are not supported.
 3) It finds HTML entities like &copy; &amp; etc, and adds Unicode tooltips for them.
 
+It finds filenames in CSS files in special format: in brackets, not in quotes.
+To tell plugin, which lexers are CSS based, edit:
+- install.inf, field "lexers=" (option is in install.inf to speedup app on other files)
+- plugin option "lexers_css", it's in config file.
+
+To edit config, call "Options/ Settings-plugins/ HTML Tooltips/ Config".
+
 It finds fragments:
 - on opening file,
 - after text is changed + pause passed (CudaText option "py_change_slow").
+
 If you're interested, what is HSL display, see
 https://www.rapidtables.com/convert/color/rgb-to-hsl.html
 
