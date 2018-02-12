@@ -10,7 +10,7 @@ MY_TAG = 101 #uniq value for all plugins with ed.hotspots()
 
 LEXERS_CSS = ('CSS', 'SCSS', 'Sass', 'LESS')
 REGEX_COLORS = r'(\#[0-9a-f]{3}\b)|(\#[0-9a-f]{6}\b)'
-REGEX_RGB = r'\brgba?\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*(,\s*\d+\s*)?\)'
+REGEX_RGB = r'\brgba?\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*(,\s*[\d\.]+\s*)?\)'
 REGEX_PIC = r'(\'|")[^\'"]+?\.(png|gif|jpg|jpeg|bmp|ico)\1'
 REGEX_PIC_CSS = r'\([^\'"\(\)]+?\.(png|gif|jpg|jpeg|bmp|ico)\)'
 REGEX_ENT = r'&\w+;'

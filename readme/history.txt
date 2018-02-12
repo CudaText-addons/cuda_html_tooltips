@@ -1,4 +1,7 @@
 
+2018.02.12
+- fix: didn't work on "rgba(n, n, n, .m)"
+
 2018.02.07
 - fix: didn't see pics in Sass/Less lexer
 
