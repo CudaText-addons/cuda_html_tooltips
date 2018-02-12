@@ -8,7 +8,7 @@ from html.parser import HTMLParser
 fn_ini = os.path.join(app_path(APP_DIR_SETTINGS), 'cuda_html_tooltips.ini')
 MY_TAG = 101 #uniq value for all plugins with ed.hotspots()
 
-LEXERS_CSS = ('CSS', 'SCSS', 'Sass', 'LESS')
+LEXERS_CSS = 'CSS,SCSS,Sass,LESS'
 REGEX_COLORS = r'(\#[0-9a-f]{3}\b)|(\#[0-9a-f]{6}\b)'
 REGEX_RGB = r'\brgba?\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*(,\s*[\d\.]+\s*)?\)'
 REGEX_PIC = r'(\'|")[^\'"]+?\.(png|gif|jpg|jpeg|bmp|ico)\1'
@@ -139,7 +139,8 @@ class Command:
                     count += 1
 
             #same for CSS lexers
-            if ed.get_filename() and (ed.get_prop(PROP_LEXER_FILE) in LEXERS_CSS):
+            lexer = ed.get_prop(PROP_LEXER_FILE)
+            if ed.get_filename() and (','+lexer+',' in ','+LEXERS_CSS+','):
                 for item in re_pic_css_compiled.finditer(line):
                     span = item.span()
                     text = item.group(0)[1:-1]
