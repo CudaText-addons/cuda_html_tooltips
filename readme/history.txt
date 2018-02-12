@@ -1,5 +1,6 @@
 
 2018.02.12
++ add: option "lexers_css" - it's additional to install.inf
 - fix: didn't work on "rgba(n, n, n, .m)"
 
 2018.02.07

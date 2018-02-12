@@ -479,6 +479,8 @@ class Command:
         ini_write(fn_ini, 'colors', 'font2', PILColorToHTMLColor(COLOR_FORM_FONT2))
         ini_write(fn_ini, 'colors', 'panel_border', PILColorToHTMLColor(COLOR_FORM_PANEL_BORDER))
 
+        ini_write(fn_ini, 'op', 'lexers_css', LEXERS_CSS)
+
         ini_write(fn_ini, 'op', 'color_size_x', str(FORM_COLOR_W))
         ini_write(fn_ini, 'op', 'color_size_y', str(FORM_COLOR_H))
 
@@ -499,6 +501,8 @@ class Command:
 
     def load_config(self):
 
+        global LEXERS_CSS
+
         global COLOR_FORM_BACK
         global COLOR_FORM_FONT
         global COLOR_FORM_FONT2
@@ -515,6 +519,8 @@ class Command:
         global FORM_PIC_W_MIN
         global FORM_PIC_H_MAX
         global FORM_PIC_H_MIN
+
+        LEXERS_CSS = ini_read(fn_ini, 'op', 'lexers_css', LEXERS_CSS)
 
         COLOR_FORM_BACK = HTMLColorToPILColor(ini_read(fn_ini, 'colors', 'back', PILColorToHTMLColor(COLOR_FORM_BACK)))
         COLOR_FORM_FONT = HTMLColorToPILColor(ini_read(fn_ini, 'colors', 'font', PILColorToHTMLColor(COLOR_FORM_FONT)))
