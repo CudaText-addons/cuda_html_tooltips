@@ -9,7 +9,7 @@ api=1.0.222
 [item1]
 section=events
 events=on_open,on_change_slow,on_hotspot
-lexers=regex:(.*HTML.*)|CSS|SCSS|Sass|LESS
+lexers=regex:(.*HTML.*)|PHP|CSS|SCSS|Sass|LESS
 
 [item2]
 section=commands

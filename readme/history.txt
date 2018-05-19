@@ -1,4 +1,7 @@
 
+2018.05.19
++ add: handle lexer PHP too
+
 2018.02.12
 + add: option "lexers_css" - it's additional to install.inf
 - fix: didn't work on "rgba(n, n, n, .m)"
