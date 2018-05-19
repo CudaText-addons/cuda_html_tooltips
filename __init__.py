@@ -13,7 +13,7 @@ REGEX_COLORS = r'(\#[0-9a-f]{3}\b)|(\#[0-9a-f]{6}\b)'
 REGEX_RGB = r'\brgba?\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*(,\s*[\d\.]+\s*)?\)'
 REGEX_PIC = r'(\'|")[^\'"]+?\.(png|gif|jpg|jpeg|bmp|ico)\1'
 REGEX_PIC_CSS = r'\([^\'"\(\)]+?\.(png|gif|jpg|jpeg|bmp|ico)\)'
-REGEX_ENT = r'&\w+;'
+REGEX_ENT = r'&\#?\w+;'
 
 html_parser = HTMLParser()
 re_colors_compiled = re.compile(REGEX_COLORS, re.I)

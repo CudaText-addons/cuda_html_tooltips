@@ -1,5 +1,6 @@
 
 2018.05.19
++ add: allow preview also for entities &#NNNN;
 + add: handle lexer PHP too
 
 2018.02.12
