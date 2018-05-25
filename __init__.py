@@ -39,6 +39,7 @@ COLOR_FORM_BACK = 0x505050
 COLOR_FORM_FONT = 0xE0E0E0
 COLOR_FORM_FONT2 = 0x40E0E0
 COLOR_FORM_PANEL_BORDER = 0xFFFFFF
+MAX_LINES = 5000
 
 
 class Command:
@@ -62,8 +63,9 @@ class Command:
 
         ed.hotspots(HOTSPOT_DELETE_BY_TAG, tag=MY_TAG)
         count = 0
+        use_count = min(ed.get_line_count(), MAX_LINES)
 
-        for nline in range(ed.get_line_count()):
+        for nline in range(use_count):
             line = ed.get_text_line(nline)
 
             #find entities
@@ -493,10 +495,12 @@ class Command:
         ini_write(fn_ini, 'op', 'pic_size_y_max', str(FORM_PIC_H_MAX))
         ini_write(fn_ini, 'op', 'pic_size_y_min', str(FORM_PIC_H_MIN))
 
+        ini_write(fn_ini, 'op', 'max_lines', str(MAX_LINES))
+
         if os.path.isfile(fn_ini):
             file_open(fn_ini)
         else:
-            print('Cannot find file:', fn_ini)
+            msg_status('Cannot find file: '+fn_ini)
 
 
     def load_config(self):
@@ -520,6 +524,8 @@ class Command:
         global FORM_PIC_H_MAX
         global FORM_PIC_H_MIN
 
+        global MAX_LINES
+
         LEXERS_CSS = ini_read(fn_ini, 'op', 'lexers_css', LEXERS_CSS)
 
         COLOR_FORM_BACK = HTMLColorToPILColor(ini_read(fn_ini, 'colors', 'back', PILColorToHTMLColor(COLOR_FORM_BACK)))
@@ -538,3 +544,5 @@ class Command:
         FORM_PIC_W_MIN = int(ini_read(fn_ini, 'op', 'pic_size_x_min', str(FORM_PIC_W_MIN)))
         FORM_PIC_H_MAX = int(ini_read(fn_ini, 'op', 'pic_size_y_max', str(FORM_PIC_H_MAX)))
         FORM_PIC_H_MIN = int(ini_read(fn_ini, 'op', 'pic_size_y_min', str(FORM_PIC_H_MIN)))
+
+        MAX_LINES = int(ini_read(fn_ini, 'op', 'max_lines', str(MAX_LINES)))

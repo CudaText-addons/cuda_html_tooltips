@@ -1,4 +1,7 @@
 
+2018.05.25
++ add: option "max_lines" which limits count if lines handled (at file begin)
+
 2018.05.19
 + add: allow preview also for entities &#NNNN;
 + add: handle lexer PHP too
