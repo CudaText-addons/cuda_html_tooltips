@@ -4,7 +4,6 @@ desc=In HTML/CSS files, plugin shows tooltips for: HTML color values, HTML entit
 type=cudatext-plugin
 subdir=cuda_html_tooltips
 homepage=https://github.com/CudaText-addons/cuda_html_tooltips
-api=1.0.222
 
 [item1]
 section=events
