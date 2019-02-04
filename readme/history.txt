@@ -1,4 +1,7 @@
 
+2019.02.04
+- fix: second file in splitted tab was not handled by plugin
+
 2018.05.25
 + add: option "max_lines" which limits count if lines handled (at file begin)
 

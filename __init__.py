@@ -53,13 +53,13 @@ class Command:
 
     def on_change_slow(self, ed_self):
 
-        self.find_hotspots()
+        self.find_hotspots(ed_self)
 
     def on_open(self, ed_self):
 
-        self.find_hotspots()
+        self.find_hotspots(ed_self)
 
-    def find_hotspots(self):
+    def find_hotspots(self, ed):
 
         ed.hotspots(HOTSPOT_DELETE_BY_TAG, tag=MY_TAG)
         count = 0
@@ -180,7 +180,7 @@ class Command:
 
         else:
             self.hide_forms()
-            hotspot = ed.hotspots(HOTSPOT_GET_LIST)[hotspot_index]
+            hotspot = ed_self.hotspots(HOTSPOT_GET_LIST)[hotspot_index]
             if hotspot['tag'] != MY_TAG: return
 
             data = json.loads(hotspot['tag_str'])
@@ -191,7 +191,7 @@ class Command:
             else:
                 text = data.get('pic', '')
                 if text:
-                    if not self.update_form_pic(text): return
+                    if not self.update_form_pic(ed_self, text): return
                     h_dlg = self.h_dlg_pic
                 else:
                     text = data.get('ent', '')
@@ -212,11 +212,11 @@ class Command:
 
             pos_x = data['x']
             pos_y = data['y']
-            pos = ed.convert(CONVERT_CARET_TO_PIXELS, x=pos_x, y=pos_y)
+            pos = ed_self.convert(CONVERT_CARET_TO_PIXELS, x=pos_x, y=pos_y)
 
             gap_out = FORM_GAP_OUT_COLOR if h_dlg==self.h_dlg_color else FORM_GAP_OUT
-            cell_size = ed.get_prop(PROP_CELL_SIZE)
-            ed_coord = ed.get_prop(PROP_COORDS)
+            cell_size = ed_self.get_prop(PROP_CELL_SIZE)
+            ed_coord = ed_self.get_prop(PROP_COORDS)
             ed_size_x = ed_coord[2]-ed_coord[0]
             ed_size_y = ed_coord[3]-ed_coord[1]
             hint_x = pos[0]
@@ -413,9 +413,9 @@ class Command:
                 })
 
 
-    def update_form_pic(self, text):
+    def update_form_pic(self, ed, text):
 
-        fn = self.get_pic_filename(text)
+        fn = self.get_pic_filename(ed, text)
         if not os.path.isfile(fn):
             return False
 
@@ -451,7 +451,7 @@ class Command:
         return True
 
 
-    def get_pic_filename(self, text):
+    def get_pic_filename(self, ed, text):
 
         #for Windows
         if os.sep != '/':
