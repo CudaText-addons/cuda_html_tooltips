@@ -28,5 +28,5 @@ If you're interested, what is HSL display, see
 https://www.rapidtables.com/convert/color/rgb-to-hsl.html
 
 
-Author: Alexey (CudaText)
+Author: Alexey Torgashin (CudaText)
 License: MIT
