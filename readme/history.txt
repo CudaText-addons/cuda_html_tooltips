@@ -1,4 +1,7 @@
 
+2021.03.06
+- fix: avoid deprecated API
+
 2019.02.04
 - fix: second file in splitted tab was not handled by plugin
 

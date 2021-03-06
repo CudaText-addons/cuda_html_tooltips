@@ -265,7 +265,10 @@ class Command:
                 'align': ALIGN_TOP,
                 'sp_a': FORM_GAP,
                 'h': FORM_COLOR_H,
-                'props': (1,0x808080,0x202020,COLOR_FORM_PANEL_BORDER),
+                'ex0': 1,
+                'ex1': 0x808080,
+                'ex2': 0x202020,
+                'ex3': COLOR_FORM_PANEL_BORDER,
                 })
 
         n = dlg_proc(h, DLG_CTL_ADD, 'label')
@@ -334,14 +337,12 @@ class Command:
                 'sp_l': FORM_GAP,
                 'sp_r': FORM_GAP,
                 'sp_b': FORM_GAP,
-                'props': (
-                    True, #center
-                    True, #stretch
-                    True, #stretch in
-                    False, #stretch out
-                    True, #keep origin x
-                    True, #keep origin y
-                    )
+                'ex0': True, #center
+                'ex1': True, #stretch
+                'ex2': True, #stretch in
+                'ex3': False, #stretch out
+                'ex4': True, #keep origin x
+                'ex5': True, #keep origin y
                 })
 
 
