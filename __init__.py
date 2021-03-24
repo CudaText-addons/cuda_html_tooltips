@@ -446,8 +446,18 @@ class Command:
 
     def update_form_ent(self, text):
 
+        s = html_parser.unescape(text)
+        if s==chr(10):
+            s = 'lf'
+        elif s==chr(13):
+            s = 'cr'
+        elif s==chr(9):
+            s = 'tab'
+        elif s==chr(0xA0):
+            s = 'sp'
+
         dlg_proc(self.h_dlg_ent, DLG_CTL_PROP_SET, name='label_text', prop={
-                'cap': html_parser.unescape(text),
+                'cap': s,
                 })
         return True
 

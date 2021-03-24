@@ -1,4 +1,7 @@
 
+2021.03.24
++ add: better show tooltip for &#10; &#13; &#9; &nbsp;
+
 2021.03.06
 - fix: avoid deprecated API
 
