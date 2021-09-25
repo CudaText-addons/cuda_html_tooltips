@@ -1,9 +1,9 @@
 import re
 import json
 import os
+import html
 from cudatext import *
 from .colorcodes import *
-from html.parser import HTMLParser
 
 fn_ini = os.path.join(app_path(APP_DIR_SETTINGS), 'cuda_html_tooltips.ini')
 MY_TAG = 101 #uniq value for all plugins with ed.hotspots()
@@ -15,7 +15,6 @@ REGEX_PIC = r'(\'|")[^\'"]+?\.(png|gif|jpg|jpeg|bmp|ico)\1'
 REGEX_PIC_CSS = r'\([^\'"\(\)]+?\.(png|gif|jpg|jpeg|bmp|ico)\)'
 REGEX_ENT = r'&\#?\w+;'
 
-html_parser = HTMLParser()
 re_colors_compiled = re.compile(REGEX_COLORS, re.I)
 re_rgb_compiled = re.compile(REGEX_RGB, re.I)
 re_pic_compiled = re.compile(REGEX_PIC, re.I)
@@ -446,7 +445,7 @@ class Command:
 
     def update_form_ent(self, text):
 
-        s = html_parser.unescape(text)
+        s = html.unescape(text)
         if s==chr(10):
             s = 'lf'
         elif s==chr(13):

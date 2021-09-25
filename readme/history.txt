@@ -1,4 +1,7 @@
 
+2021.09.25
+- fix: usage of old Python 3.4 API html.parser.HTMLParser().unescape()
+
 2021.03.24
 + add: better show tooltip for &#10; &#13; &#9; &nbsp;
 
