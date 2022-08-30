@@ -1,4 +1,7 @@
 
+2022.08.30
++ add: support more CSS color formats: https://developer.mozilla.org/en-US/docs/Web/CSS/color_value/rgba
+
 2021.09.25
 - fix: usage of old Python 3.4 API html.parser.HTMLParser().unescape()
 

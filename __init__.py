@@ -10,7 +10,7 @@ MY_TAG = 101 #uniq value for all plugins with ed.hotspots()
 
 LEXERS_CSS = 'CSS,SCSS,Sass,LESS'
 REGEX_COLORS = r'(\#[0-9a-f]{3}\b)|(\#[0-9a-f]{6}\b)'
-REGEX_RGB = r'\brgba?\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*(,\s*[\d\.]+\s*)?\)'
+REGEX_RGB = r'\brgba?\(\s*(\d+%?)\s*[,\s]\s*(\d+%?)\s*[,\s]\s*(\d+%?)\s*([,\s/]\s*[\d\.%?]+\s*)?\)'
 REGEX_PIC = r'(\'|")[^\'"]+?\.(png|gif|jpg|jpeg|bmp|ico)\1'
 REGEX_PIC_CSS = r'\([^\'"\(\)]+?\.(png|gif|jpg|jpeg|bmp|ico)\)'
 REGEX_ENT = r'&\#?\w+;'
@@ -39,6 +39,15 @@ COLOR_FORM_FONT = 0xE0E0E0
 COLOR_FORM_FONT2 = 0x40E0E0
 COLOR_FORM_PANEL_BORDER = 0xFFFFFF
 MAX_LINES = 5000
+
+def str2color(s):
+    perc = s.endswith('%')
+    if perc:
+        s = s[:-1]
+    n = int(s)
+    if perc:
+        n = n*255//100
+    return n
 
 
 class Command:
@@ -104,9 +113,9 @@ class Command:
                 span = item.span()
                 data = json.dumps({
                         'rgb': item.group(0),
-                        'r': int(item.group(1)),
-                        'g': int(item.group(2)),
-                        'b': int(item.group(3)),
+                        'r': str2color(item.group(1)),
+                        'g': str2color(item.group(2)),
+                        'b': str2color(item.group(3)),
                         'x': span[0],
                         'y': nline,
                         })
