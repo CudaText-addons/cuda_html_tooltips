@@ -1,3 +1,5 @@
+2024.03.07
++ add: support WEBP pictures, if plugin is used under CudaText 1.210.1+
 
 2022.08.30
 + add: support more CSS color formats: https://developer.mozilla.org/en-US/docs/Web/CSS/color_value/rgba
