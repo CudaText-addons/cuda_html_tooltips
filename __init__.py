@@ -418,7 +418,7 @@ class Command:
     def update_form_hsl(self, text, h, s, l):
 
         ncolor, r, g, b = hsl_to_rgb(h, s, l)
-        self.update_form_color_ex(text, ncolor, r, g, b)
+        self.update_form_color_ex(text, ncolor, r, g, b, h/360, s/100, l/100)
 
     def update_form_color_size(self):
 
@@ -427,12 +427,14 @@ class Command:
         need_size = prop['y']+prop['h']+FORM_GAP
         dlg_proc(h_dlg, DLG_PROP_SET, prop={'h': need_size})
 
-    def update_form_color_ex(self, text, ncolor, r, g, b):
+    def update_form_color_ex(self, text, ncolor, r, g, b, h=-1, s=-1, l=-1):
 
         h_dlg = self.h_dlg_color
 
         #let's get HSL like here https://www.rapidtables.com/convert/color/rgb-to-hsl.html
-        h, l, s = RGBToHLS(r, g, b)
+        if h == -1:
+            h, l, s = RGBToHLS(r, g, b)
+
         h = float_to_degrees(h)
         l = float_to_percent(l)
         s = float_to_percent(s)
