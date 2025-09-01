@@ -11,12 +11,14 @@ MY_TAG = 101 #uniq value for all plugins with ed.hotspots()
 LEXERS_CSS = 'CSS,SCSS,Sass,LESS'
 REGEX_COLORS = r'(\#[0-9a-f]{3}\b)|(\#[0-9a-f]{6}\b)'
 REGEX_RGB = r'\brgba?\(\s*(\d+%?)\s*[,\s]\s*(\d+%?)\s*[,\s]\s*(\d+%?)\s*([,\s/]\s*[\d\.%?]+\s*)?\)'
+REGEX_HSL = r'\bhsl\(\s*(\d+)\s*,\s*(\d+)%\s*,\s*(\d+)%\s*\)'
 REGEX_PIC = r'(\'|")[^\'"]+?\.(png|gif|jpg|jpeg|bmp|ico|webp)\1'
 REGEX_PIC_CSS = r'\([^\'"\(\)]+?\.(png|gif|jpg|jpeg|bmp|ico|webp)\)'
 REGEX_ENT = r'&\#?\w+;'
 
 re_colors_compiled = re.compile(REGEX_COLORS, re.I)
-re_rgb_compiled = re.compile(REGEX_RGB, re.I)
+re_rgb_compiled = re.compile(REGEX_RGB, 0)
+re_hsl_compiled = re.compile(REGEX_HSL, 0)
 re_pic_compiled = re.compile(REGEX_PIC, re.I)
 re_pic_css_compiled = re.compile(REGEX_PIC_CSS, re.I)
 re_ent_compiled = re.compile(REGEX_ENT, 0)
@@ -127,6 +129,25 @@ class Command:
                             )
                 count += 1
 
+            #find hsl
+            for item in re_hsl_compiled.finditer(line):
+                span = item.span()
+                data = json.dumps({
+                        'hsl': item.group(0),
+                        'h': str2color(item.group(1)),
+                        's': str2color(item.group(2)),
+                        'l': str2color(item.group(3)),
+                        'x': span[0],
+                        'y': nline,
+                        })
+
+                ed.hotspots(HOTSPOT_ADD,
+                            tag=MY_TAG,
+                            tag_str=data,
+                            pos=(span[0], nline, span[1], nline)
+                            )
+                count += 1
+
             #find pics, only for named files
             if ed.get_filename():
                 for item in re_pic_compiled.finditer(line):
@@ -212,7 +233,12 @@ class Command:
                             self.update_form_rgb(text, data['r'], data['g'], data['b'])
                             h_dlg = self.h_dlg_color
                         else:
-                            return
+                            text = data.get('hsl', '')
+                            if text:
+                                self.update_form_hsl(text, data['h'], data['s'], data['l'])
+                                h_dlg = self.h_dlg_color
+                            else:
+                                return
 
             prop = dlg_proc(h_dlg, DLG_PROP_GET)
             form_w = prop['w']
@@ -386,6 +412,34 @@ class Command:
     def update_form_rgb(self, text, r, g, b):
 
         ncolor = RGBToPILColor((r, g, b))
+        self.update_form_color_ex(text, ncolor, r, g, b)
+
+    def update_form_hsl(self, text, h, s, l):
+
+        h = h % 360
+        s = max(0, min(100, s)) / 100
+        l = max(0, min(100, l)) / 100
+
+        def hue_to_rgb(p, q, t):
+            if t < 0: t += 1
+            if t > 1: t -= 1
+            if t < 1/6: return p + (q - p) * 6 * t
+            if t < 1/2: return q
+            if t < 2/3: return p + (q - p) * (2/3 - t) * 6
+            return p
+
+        if s == 0:
+            r = g = b = l
+        else:
+            q = l * (1 + s) if l < 0.5 else l + s - l * s
+            p = 2 * l - q
+            r = hue_to_rgb(p, q, h / 360 + 1/3)
+            g = hue_to_rgb(p, q, h / 360)
+            b = hue_to_rgb(p, q, h / 360 - 1/3)
+
+        r, g, b = int(r * 255), int(g * 255), int(b * 255)
+        ncolor = (b << 16) | (g << 8) | r
+
         self.update_form_color_ex(text, ncolor, r, g, b)
 
     def update_form_color_size(self):
