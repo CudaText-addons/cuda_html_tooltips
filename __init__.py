@@ -134,9 +134,9 @@ class Command:
                 span = item.span()
                 data = json.dumps({
                         'hsl': item.group(0),
-                        'h': str2color(item.group(1)),
-                        's': str2color(item.group(2)),
-                        'l': str2color(item.group(3)),
+                        'h': int(item.group(1)),
+                        's': int(item.group(2)),
+                        'l': int(item.group(3)),
                         'x': span[0],
                         'y': nline,
                         })
@@ -213,6 +213,7 @@ class Command:
             if hotspot['tag'] != MY_TAG: return
 
             data = json.loads(hotspot['tag_str'])
+
             text = data.get('color', '')
             if text:
                 self.update_form_color(text)
