@@ -56,3 +56,29 @@ def float_to_percent(x):
 
 def float_to_degrees(x):
     return str(round(x*360))+'°'
+
+def hsl_to_rgb(h, s, l):
+    h = h % 360
+    s = max(0, min(100, s)) / 100
+    l = max(0, min(100, l)) / 100
+
+    def hue_to_rgb(p, q, t):
+        if t < 0: t += 1
+        if t > 1: t -= 1
+        if t < 1/6: return p + (q - p) * 6 * t
+        if t < 1/2: return q
+        if t < 2/3: return p + (q - p) * (2/3 - t) * 6
+        return p
+
+    if s == 0:
+        r = g = b = l
+    else:
+        q = l * (1 + s) if l < 0.5 else l + s - l * s
+        p = 2 * l - q
+        r = hue_to_rgb(p, q, h / 360 + 1/3)
+        g = hue_to_rgb(p, q, h / 360)
+        b = hue_to_rgb(p, q, h / 360 - 1/3)
+
+    r, g, b = int(r * 255), int(g * 255), int(b * 255)
+    ncolor = (b << 16) | (g << 8) | r
+    return (ncolor, r, g, b)
