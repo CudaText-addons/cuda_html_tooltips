@@ -259,7 +259,9 @@ class Command:
 
             #no space on bottom?
             if hint_y + form_h > ed_size_y:
-                hint_y = pos[1] - form_h - gap_out
+                y_ = pos[1] - form_h - gap_out
+                if y_>=0:
+                    hint_y = y_
 
             #no space on right?
             if hint_x + form_w > ed_size_x:
