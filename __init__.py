@@ -44,7 +44,7 @@ COLOR_FORM_FONT = 0xE0E0E0
 COLOR_FORM_FONT2 = 0x40E0E0
 COLOR_FORM_PANEL_BORDER = 0xFFFFFF
 MAX_LINES = 5000
-URL_TIMEOUT = 6
+URL_TIMEOUT = 4
 
 dir_temp = tempfile.gettempdir()
 if not os.path.isdir(dir_temp):
@@ -621,6 +621,7 @@ class Command:
         ini_write(fn_ini, 'op', 'pic_size_y_min', str(FORM_PIC_H_MIN))
 
         ini_write(fn_ini, 'op', 'max_lines', str(MAX_LINES))
+        ini_write(fn_ini, 'op', 'url_timeout', str(URL_TIMEOUT))
 
         if os.path.isfile(fn_ini):
             file_open(fn_ini)
@@ -650,6 +651,7 @@ class Command:
         global FORM_PIC_H_MIN
 
         global MAX_LINES
+        global URL_TIMEOUT
 
         LEXERS_CSS = ini_read(fn_ini, 'op', 'lexers_css', LEXERS_CSS)
 
@@ -671,3 +673,4 @@ class Command:
         FORM_PIC_H_MIN = int(ini_read(fn_ini, 'op', 'pic_size_y_min', str(FORM_PIC_H_MIN)))
 
         MAX_LINES = int(ini_read(fn_ini, 'op', 'max_lines', str(MAX_LINES)))
+        URL_TIMEOUT = int(ini_read(fn_ini, 'op', 'url_timeout', str(URL_TIMEOUT)))
