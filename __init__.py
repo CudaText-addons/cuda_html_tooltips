@@ -236,6 +236,8 @@ class Command:
                         if not os.path.isabs(text):
                             text = os.path.dirname(filename)+os.sep+text
 
+                    # print('MD pic:', text)
+                    
                     data = json.dumps({
                             'pic': text,
                             'x': span[0],
@@ -247,7 +249,6 @@ class Command:
                                 tag_str=data,
                                 pos=(span[0], nline, span[1], nline)
                                 )
-                    # print('MD pic:', data)
                     count += 1
 
             #print('HTML Tooltips: %d items'%count)
@@ -526,17 +527,19 @@ class Command:
             tmp_path = dir_temp+os.sep+'img'+ext
             # print('HTML Tooltips: temp file:', tmp_path)
             if not get_url(text, tmp_path):
-                print('NOTE: HTML Tooltips: cannot download URL', text)
+                print('NOTE: HTML Tooltips: cannot download:', text)
                 return False
             text = tmp_path
 
         fn = self.get_pic_filename(ed, text)
         if not os.path.isfile(fn):
+            print('NOTE: HTML Tooltips: cannot load image:', fn)
             return False
 
         image_proc(self.h_img, IMAGE_LOAD, fn)
         size_x, size_y = image_proc(self.h_img, IMAGE_GET_SIZE)
         if not size_x or not size_y:
+            print('NOTE: HTML Tooltips: cannot detect pic sizes:', fn)
             return False
 
         dlg_proc(self.h_dlg_pic, DLG_CTL_PROP_SET, name='label_text', prop={

@@ -12,6 +12,6 @@ lexers=regex:(.*HTML.*)|PHP|CSS|SCSS|Sass|LESS|Markdown
 
 [item2]
 section=commands
-caption=HTML Tooltips\Config
+caption=HTML-CSS-Markdown Tooltips\Config
 method=edit_config
 menu=o
