@@ -1,3 +1,6 @@
+2025.09.27
++ add: support Markdown lexer, its image-links, they can be local and URLs
+
 2025.09.01
 + add: support "hsl()" fragments
 

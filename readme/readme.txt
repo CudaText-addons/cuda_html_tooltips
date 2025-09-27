@@ -1,5 +1,9 @@
 Plugin for CudaText.
-It works in HTML/CSS files (any lexer name with words "HTML", "CSS").
+It works for lexers:
+1) HTML (any lexer name with words "HTML")
+2) CSS, SCSS, Sass, LESS
+3) Markdown: both local pictures and URL-pictures can be shown
+
 When you move mouse cursor over some fragments, tooltip appears.
 
 1) It finds HTML color values: 
@@ -16,10 +20,18 @@ When you move mouse cursor over some fragments, tooltip appears.
 
 3) It finds HTML entities like &copy; &amp; etc, and adds Unicode tooltips for them.
 
-It finds filenames in CSS files in special format: in brackets, not in quotes.
-To tell plugin, which lexers are CSS based, edit:
+4) In CSS-based lexers, it finds filenames in special format: in brackets, not in quotes.
+To tell plugin, which lexers are CSS-based, edit:
 - install.inf, field "lexers=" (option is in install.inf to speedup app on other files)
 - plugin option "lexers_css", it's in config file.
+
+5) In Markdown lexer, it finds image links, both local and URLs:
+![alt text](a.jpg "title a1")              #relative path
+![alt text](dir1/b.jpg "title a2")         #relative path
+![alt text](C:\work\dir\d.jpeg "title a3") #absolute path
+![alt text](https://example.com/img.jpg)   #URL
+
+---------
 
 To edit config, call "Options/ Settings-plugins/ HTML Tooltips/ Config".
 
