@@ -2,6 +2,7 @@ import re
 import json
 import os
 import html
+import tempfile
 from cudatext import *
 from .colorcodes import *
 
@@ -14,6 +15,7 @@ REGEX_RGB = r'\brgba?\(\s*(\d+%?)\s*[,\s]\s*(\d+%?)\s*[,\s]\s*(\d+%?)\s*([,\s/]\
 REGEX_HSL = r'\bhsl\(\s*(\d+)\s*,\s*(\d+)%\s*,\s*(\d+)%\s*\)'
 REGEX_PIC = r'(\'|")[^\'"]+?\.(png|gif|jpg|jpeg|bmp|ico|webp)\1'
 REGEX_PIC_CSS = r'\([^\'"\(\)]+?\.(png|gif|jpg|jpeg|bmp|ico|webp)\)'
+REGEX_PIC_MARKDOWN = r'!\[.*?\]\((\S+).*\)'
 REGEX_ENT = r'&\#?\w+;'
 
 re_colors_compiled = re.compile(REGEX_COLORS, re.I)
@@ -21,6 +23,7 @@ re_rgb_compiled = re.compile(REGEX_RGB, 0)
 re_hsl_compiled = re.compile(REGEX_HSL, 0)
 re_pic_compiled = re.compile(REGEX_PIC, re.I)
 re_pic_css_compiled = re.compile(REGEX_PIC_CSS, re.I)
+re_pic_markdown_compiled = re.compile(REGEX_PIC_MARKDOWN, 0)
 re_ent_compiled = re.compile(REGEX_ENT, 0)
 
 FORM_COLOR_W = 170
@@ -41,6 +44,35 @@ COLOR_FORM_FONT = 0xE0E0E0
 COLOR_FORM_FONT2 = 0x40E0E0
 COLOR_FORM_PANEL_BORDER = 0xFFFFFF
 MAX_LINES = 5000
+URL_TIMEOUT = 6
+
+dir_temp = tempfile.gettempdir()
+if not os.path.isdir(dir_temp):
+    os.mkdir(dir_temp)
+
+
+def get_url(url, fn):
+    if os.path.isfile(fn):
+        os.remove(fn)
+
+    import requests
+    try:
+        r = requests.get(url, stream=True, timeout=URL_TIMEOUT)
+    except:
+        return False
+
+    with open(fn, 'wb') as f:
+        for chunk in r.iter_content(chunk_size=1024):
+            if chunk: # filter out keep-alive new chunks
+                f.write(chunk)
+                #f.flush() commented by recommendation
+
+    if os.path.isfile(fn):
+        if os.path.getsize(fn)==0:
+            raise Exception('Server returned zero-sized file')
+        return True
+    return False
+
 
 def str2color(s):
     perc = s.endswith('%')
@@ -171,7 +203,9 @@ class Command:
 
             #same for CSS lexers
             lexer = ed.get_prop(PROP_LEXER_FILE)
-            if ed.get_filename() and (','+lexer+',' in ','+LEXERS_CSS+','):
+            filename = ed.get_filename()
+
+            if filename and (','+lexer+',' in ','+LEXERS_CSS+','):
                 for item in re_pic_css_compiled.finditer(line):
                     span = item.span()
                     text = item.group(0)[1:-1]
@@ -189,6 +223,31 @@ class Command:
                                 tag_str=data,
                                 pos=(span[0], nline, span[1], nline)
                                 )
+                    count += 1
+
+            if filename and (lexer=='Markdown'):
+                for item in re_pic_markdown_compiled.finditer(line):
+                    span = item.span()
+                    text = item.group(1)
+
+                    if '://' not in text:
+                        if os.name=='nt':
+                            text = text.replace('/', os.sep)
+                        if not os.path.isabs(text):
+                            text = os.path.dirname(filename)+os.sep+text
+
+                    data = json.dumps({
+                            'pic': text,
+                            'x': span[0],
+                            'y': nline,
+                            })
+
+                    ed.hotspots(HOTSPOT_ADD,
+                                tag=MY_TAG,
+                                tag_str=data,
+                                pos=(span[0], nline, span[1], nline)
+                                )
+                    # print('MD pic:', data)
                     count += 1
 
             #print('HTML Tooltips: %d items'%count)
@@ -459,6 +518,17 @@ class Command:
 
 
     def update_form_pic(self, ed, text):
+
+        if '://' in text:
+            ext = os.path.splitext(text)[1]
+            if not ext:
+                ext = '.jpg'
+            tmp_path = dir_temp+os.sep+'img'+ext
+            # print('HTML Tooltips: temp file:', tmp_path)
+            if not get_url(text, tmp_path):
+                print('NOTE: HTML Tooltips: cannot download URL', text)
+                return False
+            text = tmp_path
 
         fn = self.get_pic_filename(ed, text)
         if not os.path.isfile(fn):

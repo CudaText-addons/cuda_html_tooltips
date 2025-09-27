@@ -8,7 +8,7 @@ homepage=https://github.com/CudaText-addons/cuda_html_tooltips
 [item1]
 section=events
 events=on_open,on_change_slow,on_hotspot
-lexers=regex:(.*HTML.*)|PHP|CSS|SCSS|Sass|LESS
+lexers=regex:(.*HTML.*)|PHP|CSS|SCSS|Sass|LESS|Markdown
 
 [item2]
 section=commands
