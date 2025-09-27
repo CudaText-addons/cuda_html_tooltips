@@ -1,6 +1,6 @@
 [info]
-title=HTML Tooltips
-desc=In HTML/CSS files, plugin shows tooltips for: HTML color values, HTML entities, picture filenames
+title=HTML-CSS-Markdown Tooltips
+desc=In HTML/CSS/Markdown files, plugin shows tooltips for various special fragments
 type=cudatext-plugin
 subdir=cuda_html_tooltips
 homepage=https://github.com/CudaText-addons/cuda_html_tooltips
