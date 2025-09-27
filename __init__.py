@@ -16,7 +16,7 @@ REGEX_RGB = r'\brgba?\(\s*(\d+%?)\s*[,\s]\s*(\d+%?)\s*[,\s]\s*(\d+%?)\s*([,\s/]\
 REGEX_HSL = r'\bhsl\(\s*(\d+)\s*,\s*(\d+)%\s*,\s*(\d+)%\s*\)'
 REGEX_PIC = r'(\'|")[^\'"]+?\.(png|gif|jpg|jpeg|bmp|ico|webp)\1'
 REGEX_PIC_CSS = r'\([^\'"\(\)]+?\.(png|gif|jpg|jpeg|bmp|ico|webp)\)'
-REGEX_PIC_MARKDOWN = r'!\[.*?\]\((\S+).*\)'
+REGEX_PIC_MARKDOWN = r'!\[.*?\]\(([^\) ]+).*\)'
 REGEX_ENT = r'&\#?\w+;'
 
 re_colors_compiled = re.compile(REGEX_COLORS, re.I)
