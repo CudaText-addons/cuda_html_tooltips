@@ -8,6 +8,7 @@ from .colorcodes import *
 
 fn_ini = os.path.join(app_path(APP_DIR_SETTINGS), 'cuda_html_tooltips.ini')
 MY_TAG = 101 #uniq value for all plugins with ed.hotspots()
+PRE = 'HTML-CSS-Markdown Tooltips:'
 
 LEXERS_CSS = 'CSS,SCSS,Sass,LESS'
 REGEX_COLORS = r'(\#[0-9a-f]{3}\b)|(\#[0-9a-f]{6}\b)'
@@ -525,21 +526,21 @@ class Command:
             if not ext:
                 ext = '.jpg'
             tmp_path = dir_temp+os.sep+'img'+ext
-            # print('HTML Tooltips: temp file:', tmp_path)
+            # print(PRE, 'Temp file:', tmp_path)
             if not get_url(text, tmp_path):
-                print('NOTE: HTML Tooltips: cannot download:', text)
+                print(PRE, 'Cannot download:', text)
                 return False
             text = tmp_path
 
         fn = self.get_pic_filename(ed, text)
         if not os.path.isfile(fn):
-            print('NOTE: HTML Tooltips: cannot load image:', fn)
+            print(PRE, 'Cannot load image:', fn)
             return False
 
         image_proc(self.h_img, IMAGE_LOAD, fn)
         size_x, size_y = image_proc(self.h_img, IMAGE_GET_SIZE)
         if not size_x or not size_y:
-            print('NOTE: HTML Tooltips: cannot detect pic sizes:', fn)
+            print(PRE, 'Cannot detect picture sizes:', fn)
             return False
 
         dlg_proc(self.h_dlg_pic, DLG_CTL_PROP_SET, name='label_text', prop={
