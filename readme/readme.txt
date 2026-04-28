@@ -13,15 +13,19 @@ It finds fragments:
 Features
 --------
 
-1) It finds HTML color values: 
-  #RGB 
+1) It finds HTML color values and shows mouse-over tooltips for them:
+
+  #RGB
   #RRGGBB
   rgb(n, n, n)
-  rgba(n, n, n, n)
-  hsl(n, n, n)
-  and adds colored tooltips for them.
+  rgba(n, n, n, a%)
+  hsl(n, n%, n%)
+  hsla(n, n%, n%, a%)
 
-2) It finds HTML picture refs: src="..." or href="..."; and adds picture tooltips for filenames.
+2) It finds HTML picture refs:
+  src="..."
+  href="..."
+  and adds picture tooltips for filenames.
   Internally, it finds any quoted picture filenames (png, gif, jpeg, bmp, ico) without testing tags.
   Online links (http:, https:) are not supported.
 
@@ -39,10 +43,10 @@ To tell plugin, which lexers are CSS-based, edit:
 ![alt text](https://example.com/img.jpg)   #URL
 
 
-Config
-------
+Configuring
+-----------
 
-To edit config, call main menu item:
+To edit configuration file, call main menu item:
 "Options / Settings-plugins / HTML Tooltips / Config".
 
 

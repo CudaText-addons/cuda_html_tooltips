@@ -1,3 +1,6 @@
+2026.04.28
++ add: support "hsla()" fragments
+
 2025.09.27
 + add: support Markdown lexer, its image-links, they can be local and URLs
 
